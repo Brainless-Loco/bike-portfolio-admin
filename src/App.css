@@ -1,6 +1,31 @@
 .App {
-  text-align: center;
+  min-height: 95vh;
+  max-width: 100vw;
 }
+
+.ql-editor img {
+  display: block; /* Ensure images are treated as block elements for alignment */
+  margin: 0 auto; /* Default center alignment */
+}
+
+.ql-align-center img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ql-align-right img {
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.ql-align-left img {
+  display: block;
+  margin-right: auto;
+  margin-left: 0;
+}
+
 
 .App-logo {
   height: 40vmin;

@@ -1,24 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { Box } from '@mui/material';
+import CreditDiv from './Components/CreditDiv/CreditDiv';
+import LogIn from './Pages/LogIn/LogIn';
+import ResearcherProfileForm from './Pages/AddNew/Researcher/ResearcherProfileForm';
+import { HelmetProvider } from 'react-helmet-async';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <HelmetProvider>
+      <Box className='w-full pt-16'>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LogIn/>}/>
+            <Route path='/add-new/researcher' element={<ResearcherProfileForm/>}/>
+            {/* <Route path={["/Contact-us" , "/join-us" , "/Join-BIKE","/Latest"]} exact element={<ContactUs/>}/> */}
+          </Routes>
+          <CreditDiv/>
+        </Router>
+        
+      </Box>
+    </HelmetProvider>
   );
 }
 
