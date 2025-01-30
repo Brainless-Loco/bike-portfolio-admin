@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import LabelsInput from "../../../Components/Input/LabelsInput";
 import ExternalLinks from "../../../Components/Input/ExternalLinksInput";
-import ShortDescription from './ShortDescription';
-import LongDescription from './LongDescription';
-import SubmissionModal from './SubmissionModal';
+import ShortDescription from '../../../Components/Input/ShortDescription';
+import SubmissionModal from '../../../Components/Modal/SubmissionModal';
 import { addDoc, collection, getFirestore, Timestamp } from "firebase/firestore";
 import { app } from './../../../Utils/Firebase/Firebase';
 import {  DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from './../../../../node_modules/@mui/x-date-pickers/AdapterDayjs/AdapterDayjs';
+import LongDescription from "../../../Components/Input/LongDescription";
 
 const AddActivity = () => {
   const [title, setTitle] = useState('')

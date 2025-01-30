@@ -1,5 +1,5 @@
 import React from "react";
-import Editor from "../../../Components/QuillEditor/Editor";
+import Editor from "../QuillEditor/Editor";
 
 const LongDescription = ({ onChange }) => {
   return (
