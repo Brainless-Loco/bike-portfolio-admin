@@ -45,6 +45,7 @@ useEffect(() => {
       quillRef.current = quill;
       isMounted.current = true;
     }
+    /* eslint-disable */
   }, []);
 
   return (

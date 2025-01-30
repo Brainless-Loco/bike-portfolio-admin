@@ -5,6 +5,7 @@ import CreditDiv from './Components/CreditDiv/CreditDiv';
 import LogIn from './Pages/LogIn/LogIn';
 import ResearcherProfileForm from './Pages/AddNew/Researcher/ResearcherProfileForm';
 import { HelmetProvider } from 'react-helmet-async';
+import AddActivity from './Pages/AddNew/Activity/AddActivity';
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
           <Routes>
             <Route path="/" element={<LogIn/>}/>
             <Route path='/add-new/researcher' element={<ResearcherProfileForm/>}/>
-            {/* <Route path={["/Contact-us" , "/join-us" , "/Join-BIKE","/Latest"]} exact element={<ContactUs/>}/> */}
+            <Route path='/add-new/activity' element={<AddActivity/>}/>
+
           </Routes>
           <CreditDiv/>
         </Router>

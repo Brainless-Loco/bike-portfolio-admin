@@ -18,5 +18,4 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const storageBucket = "bike-csecu-server.appspot.com";
 export const analytics = getAnalytics(app);

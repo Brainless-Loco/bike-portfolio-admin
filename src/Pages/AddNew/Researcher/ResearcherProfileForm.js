@@ -12,7 +12,6 @@ import Editor from "../../../Components/QuillEditor/Editor";
 import { Helmet } from 'react-helmet-async';
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storageBucket } from "../../../Utils/Firebase/Firebase";
 
 const ResearcherProfileForm = () => {
   const [profilePhoto, setProfilePhoto] = useState(null);
