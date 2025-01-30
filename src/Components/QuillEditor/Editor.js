@@ -5,11 +5,11 @@ import ImageResize from "quill-image-resize-module-react";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-export default function Editor({editorTitle, updateHTMLContent}) {
-const quillRef = useRef(null);
-const isMounted = useRef(false);
+export default function Editor({editorTitle, updateHTMLContent, value=""}) {
+  const quillRef = useRef(null);
+  const isMounted = useRef(false);
 
-useEffect(() => {
+  useEffect(() => {
     if (!isMounted.current) {
       Quill.register("modules/imageResize", ImageResize);
       const quill = new Quill("#quill-editor", {
@@ -44,9 +44,20 @@ useEffect(() => {
 
       quillRef.current = quill;
       isMounted.current = true;
+      
+      quill.root.innerHTML = value;
     }
     /* eslint-disable */
   }, []);
+
+  useEffect(() => {
+    if (quillRef.current) {
+      const quill = quillRef.current;
+      if (quill.root.innerHTML !== value) {
+        quill.root.innerHTML = value;
+      }
+    }
+  }, [value]);
 
   return (
     <Box sx={{ mt: 3 }} className="bg-slate-100 w-full">

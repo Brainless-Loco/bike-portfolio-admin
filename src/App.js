@@ -9,6 +9,9 @@ import AddActivity from './Pages/AddNew/Activity/AddActivity';
 import AddResearch from './Pages/AddNew/Researches/AddResearch';
 import AddTeachingCourse from './Pages/AddNew/Teaching/Courses/AddTeachingCourse';
 import AddPartner from './Pages/AddNew/Partners/AddPartner';
+import AddProject from './Pages/AddNew/Project/AddProject';
+import UpdateBasicInfo from './Pages/Update/BasicInfo/UpdateBasicInfo';
+import UpdateDirectorInfo from './Pages/Update/BasicInfo/UpdateDirectorInfo';
 
 function App() {
   return (
@@ -17,11 +20,18 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<LogIn/>}/>
+
+
             <Route path='/add-new/researcher' element={<ResearcherProfileForm/>}/>
             <Route path='/add-new/activity' element={<AddActivity/>}/>
             <Route path='/add-new/researches' element={<AddResearch/>}/>
             <Route path='/add-new/teaching-courses' element={<AddTeachingCourse/>}/>
             <Route path='/add-new/partner' element={<AddPartner/>}/>
+            <Route path='/add-new/project' element={<AddProject/>}/>
+
+            
+            <Route path='/update' element={<UpdateBasicInfo/>}/>
+            <Route path='/update/director-info' element={<UpdateDirectorInfo/>}/>
 
           </Routes>
           <CreditDiv/>
