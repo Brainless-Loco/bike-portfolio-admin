@@ -13,6 +13,7 @@ import AddProject from './Pages/AddNew/Project/AddProject';
 import UpdateBasicInfo from './Pages/Update/BasicInfo/UpdateBasicInfo';
 import UpdateDirectorInfo from './Pages/Update/BasicInfo/UpdateDirectorInfo';
 import UpdateTeachingStatement from './Pages/Update/BasicInfo/UpdateTeachingStatement';
+import AddDataset from './Pages/AddNew/Dataset/AddDataset';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path='/add-new/teaching-courses' element={<AddTeachingCourse/>}/>
             <Route path='/add-new/partner' element={<AddPartner/>}/>
             <Route path='/add-new/project' element={<AddProject/>}/>
+            <Route path='/add-new/dataset' element={<AddDataset/>}/>
 
             
             <Route path='/update' element={<UpdateBasicInfo/>}/>
