@@ -7,6 +7,8 @@ import LongDescription from './LongDescription';
 import SubmissionModal from './SubmissionModal';
 import { addDoc, collection, getFirestore, Timestamp } from "firebase/firestore";
 import { app } from './../../../Utils/Firebase/Firebase';
+import {  DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from './../../../../node_modules/@mui/x-date-pickers/AdapterDayjs/AdapterDayjs';
 
 const AddActivity = () => {
   const [title, setTitle] = useState('')
@@ -15,7 +17,14 @@ const AddActivity = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [labels, setLabels] = useState([])
   const [externalLinks, setExternalLinks] = useState([])
-
+  const [activityDate, setActivityDate] = useState();
+  
+  
+  
+  const handleEffDateChange = (date) =>{
+    setActivityDate(date.$d);
+  }
+  
   const handleSubmit = async () => {
     setIsSubmitting(true);
     const db = getFirestore(app);
@@ -24,6 +33,7 @@ const AddActivity = () => {
       // Creating the new activity object
       const newActivity = {
         title,
+        activityDate,
         shortDescription,
         longDescription,
         labels,
@@ -68,7 +78,11 @@ const AddActivity = () => {
               label={"Title"} value={title}
               onChange={(e) => setTitle(e.target.value)}
               fullWidth variant="outlined" className="mb-5" />
+
         </Box>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker onChange={handleEffDateChange}  value={activityDate} label="Date of Activity" />
+          </LocalizationProvider>
       <LabelsInput labels={labels} label="Research Topics" onChange={handleLabelsChange} />
       <ExternalLinks externalLinks={externalLinks} onChange={handleLinksChange} />
       <ShortDescription value={shortDescription} onChange={setShortDescription} />
