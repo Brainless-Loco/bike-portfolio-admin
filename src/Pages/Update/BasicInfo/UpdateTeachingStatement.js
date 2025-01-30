@@ -4,40 +4,40 @@ import { getFirestore, doc, getDoc, setDoc, Timestamp } from "firebase/firestore
 import { app } from "../../../Utils/Firebase/Firebase";
 import Editor from "../../../Components/QuillEditor/Editor";
 
-const UpdateDirectorInfo = () => {
+const UpdateTeachingStatement = () => {
   const [description, setDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const db = getFirestore(app);
 
   // Fetch existing data
+  
   useEffect(() => {
     const fetchDirectorInfo = async () => {
       try {
-        const docRef = doc(db, "BasicInfo", "director-info");
+        const docRef = doc(db, "BasicInfo", "teaching-statement");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setDescription(docSnap.data().description || "");
         }
       } catch (error) {
-        console.error("Error fetching director info:", error);
+        console.error("Error fetching teaching statement:", error);
       }
     };
     fetchDirectorInfo();
-    
     /* eslint-disable */
-}, []);
+  }, []);
 
   // Handle update
   const handleUpdate = async () => {
     setIsSaving(true);
     try {
-      await setDoc(doc(db, "BasicInfo", "director-info"), {
+      await setDoc(doc(db, "BasicInfo", "teaching-statement"), {
         description,
         updatedAt: Timestamp.now(),
       });
-      alert("Director Info updated successfully!");
+      alert("Teaching statement updated successfully!");
     } catch (error) {
-      console.error("Error updating director info:", error);
+      console.error("Error updating Teaching statement:", error);
       alert("An error occurred while updating.");
     } finally {
       setIsSaving(false);
@@ -47,7 +47,7 @@ const UpdateDirectorInfo = () => {
   return (
     <Box minHeight="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <Typography variant="h3" className="mb-5">
-        Update Director Info
+        Update Teaching Statement
       </Typography>
       <Box width={'85%'} minHeight={'100vh'}>
           <Editor value={description} editorTitle="Directors Info" updateHTMLContent={setDescription} />
@@ -68,4 +68,4 @@ const UpdateDirectorInfo = () => {
   );
 };
 
-export default UpdateDirectorInfo;
+export default UpdateTeachingStatement;

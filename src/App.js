@@ -12,6 +12,7 @@ import AddPartner from './Pages/AddNew/Partners/AddPartner';
 import AddProject from './Pages/AddNew/Project/AddProject';
 import UpdateBasicInfo from './Pages/Update/BasicInfo/UpdateBasicInfo';
 import UpdateDirectorInfo from './Pages/Update/BasicInfo/UpdateDirectorInfo';
+import UpdateTeachingStatement from './Pages/Update/BasicInfo/UpdateTeachingStatement';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             
             <Route path='/update' element={<UpdateBasicInfo/>}/>
             <Route path='/update/director-info' element={<UpdateDirectorInfo/>}/>
+            <Route path='/update/teaching-statement' element={<UpdateTeachingStatement/>}/>
 
           </Routes>
           <CreditDiv/>
