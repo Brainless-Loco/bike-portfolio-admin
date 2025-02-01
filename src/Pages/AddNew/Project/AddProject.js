@@ -9,7 +9,8 @@ import SubmissionModal from './../../../Components/Modal/SubmissionModal';
 
 const AddProject = () => {
   const [title, setTitle] = useState("");
-  const [longDescription, setLongDescription] = useState("");
+  const [broadDescription, setBroadDescription] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
   const [labels, setLabels] = useState([]);
   const [externalLinks, setExternalLinks] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,7 +22,8 @@ const AddProject = () => {
     try {
       const newProject = {
         title,
-        longDescription,
+        shortDescription,
+        broadDescription,
         labels,
         externalLinks,
         createdAt: Timestamp.now(),
@@ -31,7 +33,7 @@ const AddProject = () => {
 
       alert("Project added successfully!");
       setTitle("");
-      setLongDescription("");
+      setBroadDescription("");
       setLabels([]);
       setExternalLinks([]);
     } catch (error) {
@@ -57,9 +59,22 @@ const AddProject = () => {
         />
       </Box>
 
+      {/* Short Description */}
+      <Box className="my-5">
+        <TextField
+          label="Short Description"
+          value={shortDescription}
+          onChange={(e) => setShortDescription(e.target.value)}
+          fullWidth
+          multiline={true}
+          rows={5}
+          variant="outlined"
+        />
+      </Box>
+
       {/* Long Description (Editor) */}
       <Box className="my-5">
-        <LongDescription value={longDescription} onChange={setLongDescription} />
+        <LongDescription value={broadDescription} onChange={setBroadDescription} />
       </Box>
 
       {/* Labels (Dynamic Input) */}
