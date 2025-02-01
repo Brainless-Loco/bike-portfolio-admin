@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, FormLabel, TextField, Typography } from "@mui/material";
 import LabelsInput from "../../../Components/Input/LabelsInput";
 import ExternalLinks from "../../../Components/Input/ExternalLinksInput";
 import ShortDescription from '../../../Components/Input/ShortDescription';
 import SubmissionModal from '../../../Components/Modal/SubmissionModal';
 import { addDoc, collection, getFirestore, Timestamp } from "firebase/firestore";
 import { app } from './../../../Utils/Firebase/Firebase';
-import {  DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from './../../../../node_modules/@mui/x-date-pickers/AdapterDayjs/AdapterDayjs';
 import LongDescription from "../../../Components/Input/LongDescription";
 
 const AddActivity = () => {
@@ -18,17 +16,17 @@ const AddActivity = () => {
   const [labels, setLabels] = useState([])
   const [externalLinks, setExternalLinks] = useState([])
   const [activityDate, setActivityDate] = useState();
-  
-  
-  
-  const handleEffDateChange = (date) =>{
-    setActivityDate(date.$d);
+
+
+
+  const handleEffDateChange = (e) => {
+    setActivityDate(new Date(e));
   }
-  
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
     const db = getFirestore(app);
-  
+
     try {
       // Creating the new activity object
       const newActivity = {
@@ -40,13 +38,13 @@ const AddActivity = () => {
         externalLinks,
         createdAt: Timestamp.now(), // Store the timestamp of creation
       };
-  
+
       // Adding the document to Firestore
       await addDoc(collection(db, "Activities"), newActivity);
-  
+
       // Success feedback
       alert("Activity added successfully!");
-      
+
       // Reset form states after successful submission
       setTitle("");
       setShortDescription("");
@@ -72,23 +70,25 @@ const AddActivity = () => {
 
   return (
     <Box className="row mx-10 d-flex justify-content-center align-items-center">
-        <Typography variant="h3">Add new Activity</Typography>
-        <Box className="my-5">
-          <TextField
-              label={"Title"} value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              fullWidth variant="outlined" className="mb-5" />
+      <Typography variant="h3">Add new Activity</Typography>
+      <Box className="my-5">
+        <TextField
+          label={"Title"} value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          fullWidth variant="outlined" className="mb-5" />
 
-        </Box>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker onChange={handleEffDateChange}  value={activityDate} label="Date of Activity" />
-          </LocalizationProvider>
+      </Box>
+      <FormControl sx={{width:'100%'}}>
+        <FormLabel>Date of Activity</FormLabel>
+      <input type="date" onChange={(e)=>{handleEffDateChange(e.timeStamp)}} style={{padding:'10px 20px', width:'30%', marginBottom:'10px', border:'1px solid gray', borderRadius:'5px'}}/>
+
+      </FormControl>
       <LabelsInput labels={labels} label="Research Topics" onChange={handleLabelsChange} />
       <ExternalLinks externalLinks={externalLinks} onChange={handleLinksChange} />
       <ShortDescription value={shortDescription} onChange={setShortDescription} />
       <LongDescription onChange={setLongDescription} />
       <Box className="text-center my-5">
-        <Button variant="contained" className="mx-auto" sx={{width:'50%'}} onClick={handleSubmit}>
+        <Button variant="contained" className="mx-auto" sx={{ width: '50%' }} onClick={handleSubmit}>
           Submit
         </Button>
 
