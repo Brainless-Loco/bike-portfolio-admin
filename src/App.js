@@ -14,6 +14,7 @@ import UpdateBasicInfo from './Pages/Update/BasicInfo/UpdateBasicInfo';
 import UpdateDirectorInfo from './Pages/Update/BasicInfo/UpdateDirectorInfo';
 import UpdateTeachingStatement from './Pages/Update/BasicInfo/UpdateTeachingStatement';
 import AddDataset from './Pages/AddNew/Dataset/AddDataset';
+import Dashboard from './Pages/Dashboard/Dashboard';
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<LogIn/>}/>
+            
+            <Route path="/Dashboard" element={<Dashboard/>}/>
 
 
             <Route path='/add-new/researcher' element={<ResearcherProfileForm/>}/>
