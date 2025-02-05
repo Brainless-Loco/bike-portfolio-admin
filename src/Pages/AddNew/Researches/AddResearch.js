@@ -167,8 +167,8 @@ const AddResearch = () => {
 
       {/* Date of Publication */}
       <Box className="mb-5 mt-10" >
-
-        <TextField type="date" label="Publication Date" slotProps={{ shrink: true }} value={publicationDate} onChange={(e) => setPublicationDate(e.target.value)} fullWidth />
+        <Typography variant="h6">Date of Publication</Typography>
+        <TextField type="date" slotProps={{ shrink: true }} value={publicationDate} onChange={(e) => setPublicationDate(e.target.value)} fullWidth />
       </Box>
 
       {/* Publication Type */}
