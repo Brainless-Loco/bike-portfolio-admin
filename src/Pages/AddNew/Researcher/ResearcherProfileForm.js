@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -20,6 +20,7 @@ const ResearcherProfileForm = () => {
   const [educationLevel, setEducationLevel] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [broadDescription, setBroadDescription] = useState("");
+  const [isFormer, setIsFormer] = useState(false);
 
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
@@ -34,38 +35,39 @@ const ResearcherProfileForm = () => {
       alert("Please upload a profile photo.");
       return;
     }
-  
+
     const db = getFirestore();
     const storage = getStorage();
-  
+
     try {
       // 1. Upload profile photo to Firebase Storage
       const uniqueImageName = `images/researchers/image-${Date.now()}-${Math.random()
         .toString(36)
         .substring(2, 8)}.jpg`;
       const storageRef = ref(storage, uniqueImageName);
-  
+
       // Convert the uploaded image to a Blob
       const photoBlob = await fetch(profilePhoto).then((res) => res.blob());
-  
+
       // Upload the photo
       await uploadBytes(storageRef, photoBlob);
-  
+
       // Get the photo's download URL
       const storageUrl = await getDownloadURL(storageRef);
-  
+
       // 2. Save researcher details in Firestore
       const researcherData = {
         name,
         position,
         educationLevel,
+        isFormer,
         shortDescription,
         broadDescription, // HTML format is fine for Firestore
         profilePhoto: storageUrl,
       };
-  
+
       await addDoc(collection(db, "researchers"), researcherData);
-  
+
       alert("Form submitted successfully!");
     } catch (error) {
       console.error("Error submitting the form:", error);
@@ -73,11 +75,11 @@ const ResearcherProfileForm = () => {
     }
   };
 
-  
+
 
   return (
     <Box className="mx-8 mb-5 p-5 bg-slate-300 text-center rounded shadow flex flex-col flex-wrap justify-center items-center">
-       <Helmet>
+      <Helmet>
         <title>Add New Researcher | BIKE</title>
       </Helmet>
       {/* Profile Photo */}
@@ -104,27 +106,16 @@ const ResearcherProfileForm = () => {
       </Box>
 
       {/* Researcher Name */}
-      <TextField
-        label="Researcher Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        variant="outlined"
-        margin="normal"
-        className="bg-slate-100 w-2/4"
+      <TextField label="Researcher Name" value={name} onChange={(e) => setName(e.target.value)} variant="outlined" margin="normal" className="bg-slate-100 w-2/4"
       />
 
       {/* Position */}
-      <TextField
-        label="Position"
-        value={position}
-        onChange={(e) => setPosition(e.target.value)}
-        variant="outlined"
-        margin="normal"
-        className="bg-slate-100 w-2/4"
+      <TextField label="Position" value={position} onChange={(e) => setPosition(e.target.value)}
+        variant="outlined" margin="normal" className="bg-slate-100 w-2/4"
       />
 
       {/* Education Level */}
-      <FormControl margin="normal" 
+      <FormControl margin="normal"
         className="bg-slate-100 w-2/4">
         <InputLabel>Current Education Level</InputLabel>
         <Select
@@ -137,6 +128,18 @@ const ResearcherProfileForm = () => {
               {option}
             </MenuItem>
           ))}
+        </Select>
+      </FormControl>
+
+      <FormControl className="bg-slate-100 w-2/4" margin="normal">
+        <InputLabel id="is-former-label">Is Former</InputLabel>
+        <Select
+          labelId="is-former-label"
+          value={isFormer}
+          onChange={(e)=>{setIsFormer(e.target.value)}}
+        >
+          <MenuItem value={true}>True</MenuItem>
+          <MenuItem value={false}>False</MenuItem>
         </Select>
       </FormControl>
 
