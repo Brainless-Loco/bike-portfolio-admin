@@ -21,9 +21,8 @@ const AddActivity = () => {
 
   const handleEffDateChange = (e) => {
     // console.log(Date(e))
-    setActivityDate(Date(e));
+    setActivityDate(new Date(e))
   }
-
   const handleSubmit = async () => {
     setIsSubmitting(true);
     const db = getFirestore(app);
@@ -52,6 +51,7 @@ const AddActivity = () => {
       setLongDescription("");
       setLabels([]);
       setExternalLinks([]);
+      window.location.reload();
     } catch (error) {
       console.error("Error adding activity:", error);
       alert("An error occurred while adding the activity.");
@@ -81,7 +81,7 @@ const AddActivity = () => {
       </Box>
       <FormControl sx={{width:'100%'}}>
         <FormLabel>Date of Activity</FormLabel>
-        <input type="date" onChange={(e)=>{handleEffDateChange(e.timeStamp)}} style={{padding:'10px 20px', width:'30%', marginBottom:'10px', border:'1px solid gray', borderRadius:'5px'}}/>
+        <TextField type="date" onChange={(e)=>{handleEffDateChange(e.target.value)}} style={{ width:'40%', marginBottom:'10px', border:'1px solid gray', borderRadius:'5px'}}/>
 
       </FormControl>
       <LabelsInput labels={labels} label="Research Topics" onChange={handleLabelsChange} />
