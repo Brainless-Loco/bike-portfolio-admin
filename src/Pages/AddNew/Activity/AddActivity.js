@@ -20,7 +20,8 @@ const AddActivity = () => {
 
 
   const handleEffDateChange = (e) => {
-    setActivityDate(new Date(e));
+    // console.log(Date(e))
+    setActivityDate(Date(e));
   }
 
   const handleSubmit = async () => {
@@ -80,7 +81,7 @@ const AddActivity = () => {
       </Box>
       <FormControl sx={{width:'100%'}}>
         <FormLabel>Date of Activity</FormLabel>
-      <input type="date" onChange={(e)=>{handleEffDateChange(e.timeStamp)}} style={{padding:'10px 20px', width:'30%', marginBottom:'10px', border:'1px solid gray', borderRadius:'5px'}}/>
+        <input type="date" onChange={(e)=>{handleEffDateChange(e.timeStamp)}} style={{padding:'10px 20px', width:'30%', marginBottom:'10px', border:'1px solid gray', borderRadius:'5px'}}/>
 
       </FormControl>
       <LabelsInput labels={labels} label="Research Topics" onChange={handleLabelsChange} />
