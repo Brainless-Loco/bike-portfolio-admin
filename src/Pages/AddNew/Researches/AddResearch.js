@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, TextField, Typography, MenuItem, Select, FormControl, InputLabel, Avatar } from "@mui/material";
-import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, setDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { app } from "./../../../Utils/Firebase/Firebase";
 import SubmissionModal from "../../../Components/Modal/SubmissionModal";
 import LongDescription from "../../../Components/Input/LongDescription";
