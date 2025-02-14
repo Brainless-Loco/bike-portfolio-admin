@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { getFirestore, doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { app } from "../../../Utils/Firebase/Firebase";
 import Editor from "../../../Components/QuillEditor/Editor";

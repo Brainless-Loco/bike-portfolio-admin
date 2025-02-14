@@ -50,35 +50,56 @@ const AddResearch = () => {
     }
   };
 
-
   const updateAuthorGraph = async (authors) => {
-    for (let i = 0; i < authors.length; i++) {
-      const author = authors[i];
+  for (let i = 0; i < authors.length; i++) {
+    const author = authors[i];
 
-      // Reference to the author's document in AuthorGraph
-      const authorRef = doc(db, "AuthorGraph", author.id);
-      const authorDoc = await getDoc(authorRef);
+    // Reference to the author's document in AuthorGraph
+    const authorRef = doc(db, "AuthorGraph", author.id);
+    const authorDoc = await getDoc(authorRef);
 
-      // List of co-authors (excluding the current author)
-      const coAuthors = authors
+    // Create a map of the new co-authors with count initialized to 1
+    const newCoAuthorsMap = new Map(
+      authors
         .filter((a) => a.id !== author.id)
-        .map((a) => ({ id: a.id, name: a.name, profilePhoto: a.profilePhoto }));
+        .map((a) => [a.id, { id: a.id, name: a.name, profilePhoto: a.profilePhoto || "", count: 1 }])
+    );
 
-      if (authorDoc.exists()) {
-        // If the document exists, update the co-authors list
-        await updateDoc(authorRef, {
-          coAuthors: arrayUnion(...coAuthors),
-        });
-      } else {
-        // Create a new document if it doesn't exist
-        await setDoc(authorRef, {
-          name: author.name,
-          profilePhoto: author.profilePhoto || "",
-          coAuthors: coAuthors,
-        });
-      }
+    if (authorDoc.exists()) {
+      const existingData = authorDoc.data();
+      const existingCoAuthors = existingData.coAuthors || [];
+
+      // Merge old and new co-authors while preserving previous ones
+      const mergedCoAuthors = existingCoAuthors.map((existingCoAuthor) => {
+        if (newCoAuthorsMap.has(existingCoAuthor.id)) {
+          // If co-author exists, update count
+          return {
+            ...existingCoAuthor,
+            count: (existingCoAuthor.count || 0) + 1,
+          };
+        }
+        return existingCoAuthor; // Keep existing co-authors unchanged
+      });
+
+      // Add new co-authors that were not previously in the list
+      newCoAuthorsMap.forEach((newCoAuthor, id) => {
+        if (!existingCoAuthors.some((c) => c.id === id)) {
+          mergedCoAuthors.push(newCoAuthor);
+        }
+      });
+
+      await updateDoc(authorRef, { coAuthors: mergedCoAuthors });
+    } else {
+      // If the document doesn't exist, create a new one
+      await setDoc(authorRef, {
+        name: author.name,
+        profilePhoto: author.profilePhoto || "",
+        coAuthors: Array.from(newCoAuthorsMap.values()),
+      });
     }
-  };
+  }
+};
+
 
 
   const handleSubmit = async () => {
