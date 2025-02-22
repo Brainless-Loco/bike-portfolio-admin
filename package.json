@@ -23,7 +23,8 @@
     "react-scripts": "5.0.1",
     "react-vertical-timeline-component": "^3.5.3",
     "sweetalert2": "^11.17.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yocto-queue": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
