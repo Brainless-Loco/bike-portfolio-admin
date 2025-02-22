@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import useLogout from './../../Components/Auth/useLogOut';
 
 const routes = {
   insert: [
@@ -20,11 +21,17 @@ const routes = {
 };
 
 export default function Dashboard() {
+  const logout = useLogout()
   return (
     <Box sx={{ padding: "50px 5%", minHeight:'97vh' }}>
-      <Typography variant="h4" sx={{ color: "blue", mb: 3 }}>
-        BIKE ADMIN Dashboard
-      </Typography>
+      <Box className="flex justify-between items-center flex-wrap"> 
+        <Typography variant="h2" sx={{ color: "blue", mb: 3 }}>
+          BIKE ADMIN Dashboard
+        </Typography>
+        {/* log out button */}
+        <Button variant="contained" color="error" sx={{ minWidth: 200, p: 2, borderRadius: 2 }} onClick={logout}>Log Out</Button>
+      </Box>
+      
 
       {/* Insert Section */}
       <Typography variant="h5" sx={{ mb: 2, pb: 1, borderBottom: "2px solid #1976d2" }}>
