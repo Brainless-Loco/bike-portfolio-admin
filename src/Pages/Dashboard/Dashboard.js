@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import useLogout from './../../Components/Auth/useLogOut';
+import useAuthRedirect from './../../Components/Auth/useAuthRedirect';
 
 const routes = {
   insert: [
@@ -21,6 +22,7 @@ const routes = {
 };
 
 export default function Dashboard() {
+  useAuthRedirect();
   const logout = useLogout()
   return (
     <Box sx={{ padding: "50px 5%", minHeight:'97vh' }}>

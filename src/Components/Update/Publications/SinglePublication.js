@@ -4,9 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../Utils/Firebase/Firebase";
 import Swal from "sweetalert2";
+import useAuthRedirect from "../../Auth/useAuthRedirect";
 
 export default function SinglePublication({ pub, onDelete }) {
     const navigate = useNavigate();
+
+    
+    useAuthRedirect();
 
     const handleDelete = async () => {
         Swal.fire({

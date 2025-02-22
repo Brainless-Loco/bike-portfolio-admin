@@ -4,12 +4,15 @@ import { Box, Typography, TextField, FormControl } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { db } from "../../../Utils/Firebase/Firebase";
 import SinglePublication from "../../../Components/Update/Publications/SinglePublication";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const PublicationsList = () => {
     const [publications, setPublications] = useState([]);
     const [filteredPublications, setFilteredPublications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
+    
+    useAuthRedirect();
 
     useEffect(() => {
         const fetchPublications = async () => {

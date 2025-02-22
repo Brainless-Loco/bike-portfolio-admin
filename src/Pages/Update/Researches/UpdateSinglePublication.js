@@ -6,6 +6,7 @@ import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, Typo
 import Swal from "sweetalert2";
 import Editor from "../../../Components/QuillEditor/Editor";
 import { Delete } from "@mui/icons-material";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const UpdateSinglePublication = () => {
     const { id } = useParams();
@@ -15,6 +16,9 @@ const UpdateSinglePublication = () => {
     const [loading, setLoading] = useState(!location.state);
     const [updating, setUpdating] = useState(false);
     const [researchers, setResearchers] = useState([]);
+
+    
+    useAuthRedirect();
 
     useEffect(() => {
         const fetchPublication = async () => {

@@ -5,10 +5,13 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../Utils/Firebase/Firebase";
 import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
+import useAuthRedirect from "../../Auth/useAuthRedirect";
 
 export default function SingleResearcher({ researcher }) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    
+    useAuthRedirect();
 
     const handleDelete = async () => {
         const confirm = await Swal.fire({

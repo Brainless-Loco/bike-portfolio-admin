@@ -13,6 +13,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Editor from "../../../Components/QuillEditor/Editor";
 import { db, storage } from "../../../Utils/Firebase/Firebase";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const UpdateSingleResearcherInfo = () => {
     const { id } = useParams();
@@ -22,7 +23,7 @@ const UpdateSingleResearcherInfo = () => {
     const [newPhoto, setNewPhoto] = useState(null);
     const [description, setDescription] = useState("");
 
-
+    useAuthRedirect();
 
     useEffect(() => {
         if (!researcher) {

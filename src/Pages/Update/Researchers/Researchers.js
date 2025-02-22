@@ -4,12 +4,16 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { db } from "../../../Utils/Firebase/Firebase";
 import SingleResearcher from "../../../Components/Update/Researchers/SingleResearcher";
 import { Box, Typography, TextField } from "@mui/material";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const UpdateResearchersList = () => {
     const [researchers, setResearchers] = useState([]);
     const [filteredResearchers, setFilteredResearchers] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [loading, setLoading] = useState(true);
+
+    
+    useAuthRedirect();
 
     useEffect(() => {
         const fetchResearchers = async () => {
