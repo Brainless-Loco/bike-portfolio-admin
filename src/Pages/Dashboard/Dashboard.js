@@ -21,7 +21,7 @@ const routes = {
 
 export default function Dashboard() {
   return (
-    <Box sx={{ padding: "50px 5%", minHeight:'90vh' }}>
+    <Box sx={{ padding: "50px 5%", minHeight:'97vh' }}>
       <Typography variant="h4" sx={{ color: "blue", mb: 3 }}>
         BIKE ADMIN Dashboard
       </Typography>
