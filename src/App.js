@@ -15,11 +15,13 @@ import UpdateDirectorInfo from './Pages/Update/BasicInfo/UpdateDirectorInfo';
 import UpdateTeachingStatement from './Pages/Update/BasicInfo/UpdateTeachingStatement';
 import AddDataset from './Pages/AddNew/Dataset/AddDataset';
 import Dashboard from './Pages/Dashboard/Dashboard';
+import UpdateResearchersList from './Pages/Update/Researchers/Researchers';
+import UpdateSingleResearcherInfo from './Pages/Update/Researchers/UpdateSingleResearcherInfo';
 
 function App() {
   return (
     <HelmetProvider>
-      <Box className='w-full pt-16'>
+      <Box className='w-full pt-5'>
         <Router>
           <Routes>
             <Route path="/" element={<LogIn/>}/>
@@ -39,6 +41,9 @@ function App() {
             <Route path='/update' element={<UpdateBasicInfo/>}/>
             <Route path='/update/director-info' element={<UpdateDirectorInfo/>}/>
             <Route path='/update/teaching-statement' element={<UpdateTeachingStatement/>}/>
+
+            <Route path='/update/researchers' element={<UpdateResearchersList/>}/>
+            <Route path='/update/researchers/:id' element={<UpdateSingleResearcherInfo/>}/>
 
           </Routes>
           <CreditDiv/>
