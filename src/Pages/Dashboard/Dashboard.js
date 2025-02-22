@@ -6,7 +6,7 @@ const routes = {
   insert: [
     { path: "/add-new/researcher", label: "Add Researcher" },
     { path: "/add-new/activity", label: "Add Activity" },
-    { path: "/add-new/researches", label: "Add Research" },
+    { path: "/add-new/researches", label: "Add Publication" },
     { path: "/add-new/teaching-courses", label: "Add Teaching Course" },
     { path: "/add-new/partner", label: "Add Partner" },
     { path: "/add-new/project", label: "Add Project" },
