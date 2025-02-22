@@ -14,8 +14,7 @@ const routes = {
   ],
   update: [
     { path: "/update", label: "Update Basic Info" },
-    { path: "/update/director-info", label: "Update Director Info" },
-    { path: "/update/teaching-statement", label: "Update Teaching Statement" },
+    { path: "/update/researchers", label: "Researchers" },
   ],
 };
 
