@@ -51,7 +51,7 @@ const UpdateSinglePublication = () => {
         setUpdating(true);
         try {
             await updateDoc(doc(db, "Researches", publication.id), publication);
-            Swal.fire("Success!", "Publication updated successfully!", "success");
+            Swal.fire("Success!", "Publication was updated successfully!", "success");
             navigate("/publications");
         } catch (error) {
             console.error("Update error:", error);
