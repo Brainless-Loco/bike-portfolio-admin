@@ -51,7 +51,7 @@ const UpdateResearchersList = () => {
     if (loading) return <CircularProgress className="m-auto" />;
 
     return (
-        <Box my={2} py={2} className="bg-gray-100 p-4 rounded-lg min-h-[95vh]">
+        <Box mb={2} py={2} className="bg-gray-100 p-4 rounded-lg min-h-[95vh]">
             <Typography variant="h4" textAlign="center" mb={2}>
                 Update Team Members Info
             </Typography>

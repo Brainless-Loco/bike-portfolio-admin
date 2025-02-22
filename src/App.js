@@ -17,6 +17,8 @@ import AddDataset from './Pages/AddNew/Dataset/AddDataset';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import UpdateResearchersList from './Pages/Update/Researchers/Researchers';
 import UpdateSingleResearcherInfo from './Pages/Update/Researchers/UpdateSingleResearcherInfo';
+import PublicationsList from './Pages/Update/Researches/PublicationsList';
+import UpdateSignlePublication from './Pages/Update/Researches/UpdateSinglePublication';
 
 function App() {
   return (
@@ -37,13 +39,18 @@ function App() {
             <Route path='/add-new/project' element={<AddProject/>}/>
             <Route path='/add-new/dataset' element={<AddDataset/>}/>
 
-            
+            {/* Update */}
             <Route path='/update' element={<UpdateBasicInfo/>}/>
             <Route path='/update/director-info' element={<UpdateDirectorInfo/>}/>
             <Route path='/update/teaching-statement' element={<UpdateTeachingStatement/>}/>
 
             <Route path='/update/researchers' element={<UpdateResearchersList/>}/>
             <Route path='/update/researchers/:id' element={<UpdateSingleResearcherInfo/>}/>
+
+            
+            <Route path='/update/publications' element={<PublicationsList/>}/>
+            <Route path='/update/publications/:id' element={<UpdateSignlePublication/>}/>
+
 
           </Routes>
           <CreditDiv/>
