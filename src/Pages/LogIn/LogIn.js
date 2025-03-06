@@ -72,7 +72,7 @@ const LogIn = () => {
     return (
         <Box className="p-6 max-w-md mx-auto space-y-4 min-h-[95vh]">
             <Typography variant="h4" textAlign="center">Admin Login</Typography>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleLogin} className="space-y-5">
                 <TextField
                     label="Email, Username, or Phone"
                     name="identifier"
