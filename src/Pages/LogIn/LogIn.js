@@ -39,8 +39,8 @@ const LogIn = () => {
                 const foundUser = accounts.find(
                     (acc) =>
                         (acc.email === credentials.identifier ||
-                         acc.username === credentials.identifier ||
-                         acc.phone === credentials.identifier) &&
+                            acc.username === credentials.identifier ||
+                            acc.phone === credentials.identifier) &&
                         acc.password === credentials.password
                 );
 
@@ -72,23 +72,26 @@ const LogIn = () => {
     return (
         <Box className="p-6 max-w-md mx-auto space-y-4 min-h-[95vh]">
             <Typography variant="h4" textAlign="center">Admin Login</Typography>
-            <TextField
-                label="Email, Username, or Phone"
-                name="identifier"
-                fullWidth
-                value={credentials.identifier}
-                onChange={handleChange}
-                className="mb-3"
-            />
-            <TextField
-                label="Password"
-                type="password"
-                name="password"
-                fullWidth
-                value={credentials.password}
-                onChange={handleChange}
-                className="mb-3"
-            />
+            <form onSubmit={handleLogin}>
+                <TextField
+                    label="Email, Username, or Phone"
+                    name="identifier"
+                    fullWidth
+                    value={credentials.identifier}
+                    onChange={handleChange}
+                    className="mb-3"
+                />
+                <TextField
+                    label="Password"
+                    type="password"
+                    name="password"
+                    fullWidth
+                    value={credentials.password}
+                    onChange={handleChange}
+                    className="mb-3"
+                />
+            </form>
+
             <Button
                 variant="contained"
                 fullWidth
