@@ -19,6 +19,7 @@ import UpdateResearchersList from './Pages/Update/Researchers/Researchers';
 import UpdateSingleResearcherInfo from './Pages/Update/Researchers/UpdateSingleResearcherInfo';
 import PublicationsList from './Pages/Update/Researches/PublicationsList';
 import UpdateSignlePublication from './Pages/Update/Researches/UpdateSinglePublication';
+import UpdateProjects from './Pages/Update/Projects/UpdateProjects';
 
 function App() {
   return (
@@ -50,6 +51,8 @@ function App() {
             
             <Route path='/update/publications' element={<PublicationsList/>}/>
             <Route path='/update/publications/:id' element={<UpdateSignlePublication/>}/>
+
+            <Route path='/update/projects' element={<UpdateProjects/>}/>
 
 
           </Routes>

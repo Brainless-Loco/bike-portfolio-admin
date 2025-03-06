@@ -38,7 +38,8 @@ const AddProject = () => {
     if (selectedTopic && projects.includes(selectedTopic)) {
       detailedProjects.forEach(p => {
         if (p.topic === selectedTopic) {
-          setTopics(p.topics)
+          setTopics(p.topics);
+          setNewTopicDescription(p.description);
         }
       })
     }
@@ -90,6 +91,7 @@ const AddProject = () => {
 
     const projectData = {
       topic: selectedTopic,
+      description: newTopicDescription,
       topics: topics
     };
     let id = ""
@@ -124,22 +126,20 @@ const AddProject = () => {
         onInputChange={(_, newValue) => setSelectedTopic(newValue)}
         renderInput={(params) => <TextField {...params} label="Project Topic" fullWidth />}
       />
-      {selectedTopic && !projects.includes(selectedTopic) && (
-        <TextField
-          label="Short Description"
-          fullWidth
-          className="mt-3"
-          multiline
-          rows={5}
-          value={newTopicDescription}
-          onChange={(e) => setNewTopicDescription(e.target.value)}
-        />
-      )}
+      <TextField
+        label="Short Description"
+        fullWidth
+        className="mt-3"
+        multiline
+        rows={5}
+        value={newTopicDescription}
+        onChange={(e) => setNewTopicDescription(e.target.value)}
+      />
       <Button variant="outlined" className="mt-3" onClick={handleAddTopic}>Add Topic</Button>
       {topics.map((topic, index) => (
         <Box key={index} className="mt-5 p-3 border rounded-lg">
           <TextField
-            label="Topic Name"
+            label="Subtopic Name"
             fullWidth
             value={topic.name}
             onChange={(e) => handleTopicChange(index, e.target.value)}
@@ -166,7 +166,7 @@ const AddProject = () => {
           ))}
           <Box className="space-x-4">
             <Button variant="outlined" onClick={() => handleAddMember(index)}>Add Member</Button>
-            <Button variant="contained" color="error" onClick={() => handleRemoveTopic(index)}>Remove Topic</Button>
+            <Button variant="contained" color="error" onClick={() => handleRemoveTopic(index)}>Remove Subtopic</Button>
           </Box>
 
 

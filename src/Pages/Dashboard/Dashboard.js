@@ -9,7 +9,7 @@ const routes = {
     { path: "/add-new/researcher", label: "Add Researcher" },
     { path: "/add-new/activity", label: "Add Activity" },
     { path: "/add-new/researches", label: "Add Publication" },
-    { path: "/add-new/teaching-courses", label: "Add Teaching Course" },
+    // { path: "/add-new/teaching-courses", label: "Add Teaching Course" },
     { path: "/add-new/partner", label: "Add Partner" },
     { path: "/add-new/project", label: "Add Project" },
     { path: "/add-new/dataset", label: "Add Dataset" },
@@ -17,6 +17,7 @@ const routes = {
   update: [
     { path: "/update", label: "Update Basic Info" },
     { path: "/update/researchers", label: "Researchers" },
+    { path: "/update/projects", label: "Projects" },
     { path: "/update/publications", label: "Publications" },
   ],
 };
