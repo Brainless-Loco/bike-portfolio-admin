@@ -28,7 +28,8 @@ const LogIn = () => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
-    const handleLogin = async () => {
+    const handleLogin = async (event) => {
+        event.preventDefault(); // Prevents full page reload
         setLoading(true);
         try {
             const authDocRef = doc(db, "BasicInfo", "auth");
@@ -70,7 +71,7 @@ const LogIn = () => {
     };
 
     return (
-        <Box className="p-6 max-w-md mx-auto space-y-4 min-h-[95vh]">
+        <Box className="p-6 max-w-md mx-auto space-y-4 min-h-[95vh] mt-10">
             <Typography variant="h4" textAlign="center">Admin Login</Typography>
             <form onSubmit={handleLogin} className="space-y-5">
                 <TextField
@@ -90,17 +91,16 @@ const LogIn = () => {
                     onChange={handleChange}
                     className="mb-3"
                 />
-            </form>
 
-            <Button
-                variant="contained"
-                type="submit"
-                fullWidth
-                onClick={handleLogin}
-                disabled={loading}
-            >
-                {loading ? <CircularProgress size={24} /> : "Log In"}
-            </Button>
+                <Button
+                    variant="contained"
+                    type="submit"
+                    fullWidth
+                    disabled={loading}
+                >
+                    {loading ? <CircularProgress size={24} /> : "Log In"}
+                </Button>
+            </form>
         </Box>
     );
 };
