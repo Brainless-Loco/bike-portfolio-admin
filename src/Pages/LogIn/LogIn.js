@@ -94,6 +94,7 @@ const LogIn = () => {
 
             <Button
                 variant="contained"
+                type="submit"
                 fullWidth
                 onClick={handleLogin}
                 disabled={loading}
