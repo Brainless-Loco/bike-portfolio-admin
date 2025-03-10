@@ -20,6 +20,7 @@ import UpdateSingleResearcherInfo from './Pages/Update/Researchers/UpdateSingleR
 import PublicationsList from './Pages/Update/Researches/PublicationsList';
 import UpdateSignlePublication from './Pages/Update/Researches/UpdateSinglePublication';
 import UpdateProjects from './Pages/Update/Projects/UpdateProjects';
+import ContactMessages from './Pages/Others/ContactMessages';
 
 function App() {
   return (
@@ -53,6 +54,11 @@ function App() {
             <Route path='/update/publications/:id' element={<UpdateSignlePublication/>}/>
 
             <Route path='/update/projects' element={<UpdateProjects/>}/>
+
+
+            {/* Others */}
+
+            <Route path='others/messages' element={<ContactMessages/>}/>
 
 
           </Routes>

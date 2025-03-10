@@ -20,6 +20,9 @@ const routes = {
     { path: "/update/projects", label: "Projects" },
     { path: "/update/publications", label: "Publications" },
   ],
+  others:[
+    { path: "/others/messages", label: "Messages" },
+  ]
 };
 
 export default function Dashboard() {
@@ -58,7 +61,7 @@ export default function Dashboard() {
       <Typography variant="h5" sx={{ mb: 2, pb: 1, borderBottom: "2px solid #1976d2" }}>
         Update
       </Typography>
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb:4 }}>
         {routes.update.map((route) => (
           <Button
             key={route.path}
@@ -66,6 +69,24 @@ export default function Dashboard() {
             to={route.path}
             variant="contained"
             sx={{ bgcolor: "#ff9800", color: "white", minWidth: 200, p: 2, borderRadius: 2 }}
+          >
+            {route.label}
+          </Button>
+        ))}
+      </Box>
+
+      {/* Others Section */}
+      <Typography variant="h5" sx={{ mb: 2, pb: 1, borderBottom: "2px solid #1976d2" }}>
+        Others
+      </Typography>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+        {routes.others.map((route) => (
+          <Button
+            key={route.path}
+            component={Link}
+            to={route.path}
+            variant="contained"
+            sx={{ bgcolor: "#23f502", color: "white", minWidth: 200, p: 2, borderRadius: 2 }}
           >
             {route.label}
           </Button>
