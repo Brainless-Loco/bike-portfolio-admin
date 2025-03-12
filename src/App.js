@@ -21,6 +21,7 @@ import PublicationsList from './Pages/Update/Researches/PublicationsList';
 import UpdateSignlePublication from './Pages/Update/Researches/UpdateSinglePublication';
 import UpdateProjects from './Pages/Update/Projects/UpdateProjects';
 import ContactMessages from './Pages/Others/ContactMessages';
+import VacancyForm from './Pages/AddNew/Vacancy/VacancyForm';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path='/add-new/partner' element={<AddPartner/>}/>
             <Route path='/add-new/project' element={<AddProject/>}/>
             <Route path='/add-new/dataset' element={<AddDataset/>}/>
+            <Route path='/add-new/vacancy' element={<VacancyForm/>}/>
 
             {/* Update */}
             <Route path='/update' element={<UpdateBasicInfo/>}/>
@@ -48,6 +50,9 @@ function App() {
 
             <Route path='/update/researchers' element={<UpdateResearchersList/>}/>
             <Route path='/update/researchers/:id' element={<UpdateSingleResearcherInfo/>}/>
+
+            
+            <Route path='/update/vacancy' element={<VacancyForm/>}/>
 
             
             <Route path='/update/publications' element={<PublicationsList/>}/>

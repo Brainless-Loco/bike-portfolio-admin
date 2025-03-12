@@ -6,19 +6,21 @@ import useAuthRedirect from './../../Components/Auth/useAuthRedirect';
 
 const routes = {
   insert: [
-    { path: "/add-new/researcher", label: "Add Researcher" },
-    { path: "/add-new/activity", label: "Add Activity" },
-    { path: "/add-new/researches", label: "Add Publication" },
+    { path: "/add-new/researcher", label: "Researcher" },
+    { path: "/add-new/activity", label: "Activity" },
+    { path: "/add-new/researches", label: "Publication" },
     // { path: "/add-new/teaching-courses", label: "Add Teaching Course" },
-    { path: "/add-new/partner", label: "Add Partner" },
-    { path: "/add-new/project", label: "Add Project" },
-    { path: "/add-new/dataset", label: "Add Dataset" },
+    { path: "/add-new/partner", label: "Partner" },
+    { path: "/add-new/project", label: "Project" },
+    { path: "/add-new/dataset", label: "Dataset" },
+    { path: "/add-new/vacancy", label: "Vacancy" },
   ],
   update: [
     { path: "/update", label: "Update Basic Info" },
     { path: "/update/researchers", label: "Researchers" },
     { path: "/update/projects", label: "Projects" },
     { path: "/update/publications", label: "Publications" },
+    { path: "/update/vacancy", label: "Vacancy" },
   ],
   others:[
     { path: "/others/messages", label: "Messages" },
