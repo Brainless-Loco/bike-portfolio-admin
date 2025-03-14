@@ -7,9 +7,12 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { db } from "../../../Utils/Firebase/Firebase";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const VacancyList = () => {
   const [vacancies, setVacancies] = useState([]);
+
+  useAuthRedirect();
 
   useEffect(() => {
     const fetchVacancies = async () => {

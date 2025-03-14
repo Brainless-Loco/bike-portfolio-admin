@@ -5,11 +5,14 @@ import ContactMessageModal from "../../Components/Modal/ContactMessageModal";
 import ContactMessageCard from "../../Components/ContactMessages/ContactMessageCard";
 import { Box, Typography } from "@mui/material";
 import Swal from "sweetalert2";
+import useAuthRedirect from "../../Components/Auth/useAuthRedirect";
 
 const ContactMessages = () => {
     const [messages, setMessages] = useState([]);
     const [selectedMessage, setSelectedMessage] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
+
+    useAuthRedirect();
 
     useEffect(() => {
         const fetchMessages = async () => {

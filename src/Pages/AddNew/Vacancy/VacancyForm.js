@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import Swal from "sweetalert2";
 import { db } from "../../../Utils/Firebase/Firebase";
 import Editor from "../../../Components/QuillEditor/Editor";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const VacancyForm = () => {
     const [allVacancies, setAllVacancies] = useState([]);
@@ -21,6 +22,8 @@ const VacancyForm = () => {
     const [positionTypes, setPositionTypes] = useState([]);
     const [positionNames, setPositionNames] = useState([]);
     const [existingVacancyId, setExistingVacancyId] = useState(null);
+
+    useAuthRedirect();
 
     useEffect(() => {
         const fetchData = async () => {

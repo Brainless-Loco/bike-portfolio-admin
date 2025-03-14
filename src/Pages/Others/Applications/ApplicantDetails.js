@@ -6,11 +6,14 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { db } from "../../../Utils/Firebase/Firebase";
 import PDFModal from "../../../Components/Modal/PDFModal";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const ApplicantDetails = () => {
   const { vacancy_id, applicant_id } = useParams();
   const [applicant, setApplicant] = useState(null);
   const [selectedPDF, setSelectedPDF] = useState(null);
+
+  useAuthRedirect();
 
   useEffect(() => {
     const fetchApplicant = async () => {
@@ -24,6 +27,7 @@ const ApplicantDetails = () => {
   }, [vacancy_id, applicant_id]);
 
   if (!applicant) return <Typography>Loading...</Typography>;
+  
 
   return (
     <Box className="border p-3 my-3 bg-white rounded shadow min-h-[95vh]">

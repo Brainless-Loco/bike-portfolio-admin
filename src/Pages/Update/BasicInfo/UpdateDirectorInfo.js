@@ -5,11 +5,14 @@ import Typography from '@mui/material/Typography';
 import { getFirestore, doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { app } from "../../../Utils/Firebase/Firebase";
 import Editor from "../../../Components/QuillEditor/Editor";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const UpdateDirectorInfo = () => {
   const [description, setDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const db = getFirestore(app);
+
+  useAuthRedirect();
 
   // Fetch existing data
   useEffect(() => {

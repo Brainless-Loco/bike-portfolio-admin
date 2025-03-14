@@ -11,6 +11,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { db, storage } from "../../../Utils/Firebase/Firebase";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const ApplicationsList = () => {
   const { vacancy_id } = useParams();
@@ -64,6 +65,8 @@ const ApplicationsList = () => {
   const filteredApps = applications.filter((app) =>
     app.personalData?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  
+  useAuthRedirect();
 
   return (
     <Box className="border p-3 my-3 bg-white rounded shadow min-h-[95vh]">
