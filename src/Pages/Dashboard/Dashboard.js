@@ -24,6 +24,7 @@ const routes = {
   ],
   others:[
     { path: "/others/messages", label: "Messages" },
+    { path: "/others/applications", label: "Applications" },
     { path:"https://docs.google.com/document/d/16z6ZEAPfC5lMZLSaejWE0uvK1HDtF4Anr5YwBGWNqpg/edit?usp=sharing", label:"Server Set up WIKI", target:"__blank"}
   ]
 };
@@ -90,7 +91,7 @@ export default function Dashboard() {
             to={route.path}
             target={route.target ?? ""}
             variant="contained"
-            sx={{ bgcolor: "#23f502", color: "white", minWidth: 200, p: 2, borderRadius: 2 }}
+            sx={{ bgcolor: "#014a0e", color: "white", minWidth: 200, p: 2, borderRadius: 2 }}
           >
             {route.label}
           </Button>

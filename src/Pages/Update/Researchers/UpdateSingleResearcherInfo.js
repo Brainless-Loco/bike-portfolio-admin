@@ -14,6 +14,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Editor from "../../../Components/QuillEditor/Editor";
 import { db, storage } from "../../../Utils/Firebase/Firebase";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
+import Swal from "sweetalert2";
 
 const UpdateSingleResearcherInfo = () => {
     const { id } = useParams();
@@ -61,10 +62,11 @@ const UpdateSingleResearcherInfo = () => {
                 profilePhoto: photoURL,
             });
 
-            alert("All the information has been updated successfully.")
+            Swal.fire("Success!", "All the information has been updated successfully.", "success");
             window.location.reload();
 
         } catch (error) {
+            Swal.fire("Error", "Failed to Update.", "error");
             console.error("Update failed:", error);
         }
         setLoading(false);

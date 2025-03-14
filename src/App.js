@@ -22,6 +22,9 @@ import UpdateSignlePublication from './Pages/Update/Researches/UpdateSinglePubli
 import UpdateProjects from './Pages/Update/Projects/UpdateProjects';
 import ContactMessages from './Pages/Others/ContactMessages';
 import VacancyForm from './Pages/AddNew/Vacancy/VacancyForm';
+import VacancyList from './Pages/Others/Applications/VacancyList'
+import ApplicantDetails from './Pages/Others/Applications/ApplicantDetails';
+import ApplicationsList from './Pages/Others/Applications/ApplicationsList';
 
 function App() {
   return (
@@ -64,6 +67,9 @@ function App() {
             {/* Others */}
 
             <Route path='others/messages' element={<ContactMessages/>}/>
+            <Route path='others/applications' element={<VacancyList/>}/>
+            <Route path="/Applications/:vacancy_id" element={<ApplicationsList />} />
+            <Route path="/Applications/:vacancy_id/applicant/:applicant_id" element={<ApplicantDetails />} />
 
 
           </Routes>
