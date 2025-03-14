@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
@@ -10,6 +10,7 @@ import { db } from "../../../Utils/Firebase/Firebase";
 import Editor from "../../../Components/QuillEditor/Editor";
 
 const VacancyForm = () => {
+    const [allVacancies, setAllVacancies] = useState([]);
     const [positionType, setPositionType] = useState("");
     const [positionName, setPositionName] = useState("");
     const [applicationDeadline, setApplicationDeadline] = useState("");
@@ -25,38 +26,94 @@ const VacancyForm = () => {
         const fetchData = async () => {
             const querySnapshot = await getDocs(collection(db, "Vacancies"));
             let types = new Set();
-            let names = new Set();
             let vacancies = [];
-
+    
             querySnapshot.forEach((doc) => {
-                types.add(doc.data().position_type);
-                names.add(doc.data().position_name);
-                vacancies.push({ id: doc.id, ...doc.data() });
+                const data = doc.data();
+                types.add(data.position_type);
+                vacancies.push({ id: doc.id, ...data });
             });
-
+    
+            setAllVacancies(vacancies);
             setPositionTypes(Array.from(types));
-            setPositionNames(Array.from(names));
-
-            // Check if this vacancy exists
-            const existingVacancy = vacancies.find(
-                (vac) => vac.position_type === positionType && vac.position_name === positionName
-            );
-
-            if (existingVacancy) {
-                setExistingVacancyId(existingVacancy.id);
-                setApplicationDeadline(existingVacancy.application_deadline);
-                setShortDescription(existingVacancy.short_description);
-                setBroadDescription(existingVacancy.broad_description);
-                setRequirements(existingVacancy.requirements);
-                setTotalVacancy(existingVacancy.total_vacancy);
-            } else {
-                // Reset form if the vacancy doesn't exist (i.e., new positionType/positionName combination)
-                setExistingVacancyId(null);
-            }
         };
-
+    
         fetchData();
-    }, [positionType, positionName]);
+    }, []); // Fetch only once
+    
+    useEffect(() => {
+        // Filter position names based on the selected positionType
+        if (positionType) {
+            const filteredNames = allVacancies
+                .filter((vac) => vac.position_type === positionType)
+                .map((vac) => vac.position_name);
+            
+            setPositionNames([...new Set(filteredNames)]); // Ensure unique names
+        } else {
+            setPositionNames([]);
+        }
+    }, [positionType, allVacancies]);
+    
+    useEffect(() => {
+        // Find existing vacancy based on selected positionType & positionName
+        const existingVacancy = allVacancies.find(
+            (vac) => vac.position_type === positionType && vac.position_name === positionName
+        );
+    
+        if (existingVacancy) {
+            setExistingVacancyId(existingVacancy.id);
+            setApplicationDeadline(existingVacancy.application_deadline);
+            setShortDescription(existingVacancy.short_description);
+            setBroadDescription(existingVacancy.broad_description);
+            setRequirements(existingVacancy.requirements);
+            setTotalVacancy(existingVacancy.total_vacancy);
+        } else {
+            setExistingVacancyId(null);
+            setApplicationDeadline("");
+            setShortDescription("");
+            setBroadDescription("");
+            setRequirements("");
+            setTotalVacancy("");
+        }
+    }, [positionType, positionName, allVacancies]);    
+
+    const handleDeleteVacancy = async () => {
+        if (!existingVacancyId) {
+            Swal.fire("Error", "No vacancy selected to delete.", "error");
+            return;
+        }
+    
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deleteDoc(doc(db, "Vacancies", existingVacancyId));
+                    Swal.fire("Deleted!", "The vacancy has been deleted.", "success");
+    
+                    // Update state after deletion
+                    setAllVacancies((prevVacancies) => prevVacancies.filter(vac => vac.id !== existingVacancyId));
+                    setExistingVacancyId(null);
+                    setPositionName("");
+                    setApplicationDeadline("");
+                    setShortDescription("");
+                    setBroadDescription("");
+                    setRequirements("");
+                    setTotalVacancy("");
+                } catch (error) {
+                    Swal.fire("Error", "Failed to delete vacancy.", "error");
+                    console.error("Error deleting document:", error);
+                }
+            }
+        });
+    };
+    
 
     const handleSubmit = async () => {
         if (!positionType || !positionName || !applicationDeadline || !shortDescription || !broadDescription || !requirements || !totalVacancy) {
@@ -175,7 +232,7 @@ const VacancyForm = () => {
             <Editor id="broad_desc" editorTitle={"Broad Description"} updateHTMLContent={setBroadDescription} value={broadDescription} />
 
             {/* Submit Button */}
-            <Box className="w-full pt-10 flex justify-center">
+            <Box className="w-full pt-10 flex justify-center flex-wrap gap-3">
                 <Button
                     variant="contained"
                     color="primary"
@@ -183,6 +240,16 @@ const VacancyForm = () => {
                     onClick={handleSubmit}
                 >
                     {existingVacancyId ? "Update" : "Submit"}
+                </Button>
+
+                <Button
+                    variant="contained"
+                    color="error"
+                    className="w-[80%] h-12"
+                    onClick={handleDeleteVacancy}
+                    sx={{display:existingVacancyId ?"block" :'none'}}
+                >
+                    Delete
                 </Button>
             </Box>
 

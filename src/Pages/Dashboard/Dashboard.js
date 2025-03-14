@@ -35,7 +35,7 @@ export default function Dashboard() {
     <Box sx={{ padding: "50px 5%", minHeight:'97vh' }}>
       <Box className="flex justify-between items-center flex-wrap"> 
         <Typography variant="h2" sx={{ color: "blue", mb: 3 }}>
-          BIKE ADMIN Dashboard
+          BIKE Admin Dashboard
         </Typography>
         {/* log out button */}
         <Button variant="contained" color="error" sx={{ minWidth: 200, p: 2, borderRadius: 2 }} onClick={logout}>Log Out</Button>
