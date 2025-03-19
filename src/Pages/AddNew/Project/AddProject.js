@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import { db } from "../../../Utils/Firebase/Firebase";
 import Editor from "../../../Components/QuillEditor/Editor";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
+import { Helmet } from "react-helmet-async";
 
 const AddProjects = () => {
   const [topics, setTopics] = useState([]);
@@ -132,6 +133,10 @@ const AddProjects = () => {
 
   return (
     <div className="w-full space-y-4 min-h-[95vh]">
+      <Helmet>
+        <title>Add/Update Project Topic Info - BIKE Lab</title>
+        <meta name="description" content="Add/Update project topic info in the BIKE Lab" />
+      </Helmet>
       <Box className=" mx-7 mb-2 shadow rounded p-5">
         <Typography variant="h3">Add/Update Project Topic Info</Typography>
         <Autocomplete

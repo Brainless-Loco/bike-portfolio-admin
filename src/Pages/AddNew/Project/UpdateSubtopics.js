@@ -7,6 +7,7 @@ import { db } from "../../../Utils/Firebase/Firebase";
 import Editor from "../../../Components/QuillEditor/Editor";
 import MemberList from "../../../Components/Projects/MemberList";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
+import { Helmet } from "react-helmet-async";
 
 const UpdateSubtopics = () => {
     const { id } = useParams(); // Project ID from URL
@@ -133,6 +134,10 @@ const UpdateSubtopics = () => {
 
     return (
         <Box className="w-full px-5 py-5 ">
+            <Helmet>
+                <title>Update Subtopics | Bike Portfolio Admin</title>
+                <meta name="description" content="Update subtopics of a project in the Bike Portfolio admin" />
+            </Helmet>
             <Box className="space-y-4 rounded shadow p-3">
                 <Typography variant="h3">Add/Update Subtopics</Typography>
                 <Autocomplete
