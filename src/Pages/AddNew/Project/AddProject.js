@@ -1,185 +1,183 @@
-import { useEffect, useState } from "react";
-import { Autocomplete, TextField, Box, Typography, Avatar, FormControl, InputLabel, Select, MenuItem, IconButton, Button } from "@mui/material";
-import { Delete } from "@mui/icons-material";
-import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
-import { db } from "../../../Utils/Firebase/Firebase";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { collection, getDocs, doc, deleteDoc, addDoc, updateDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 
-const AddProject = () => {
-  const [detailedProjects, setDetailedProjects] = useState([])
-  const [projects, setProjects] = useState([]);
-  const [researchers, setResearchers] = useState([]);
-  const [selectedTopic, setSelectedTopic] = useState(null);
-  const [newTopicDescription, setNewTopicDescription] = useState("");
-  const [topics, setTopics] = useState([]);
-  const [loading, setLoading] = useState(false);
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { db } from "../../../Utils/Firebase/Firebase";
+import Editor from "../../../Components/QuillEditor/Editor";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
+const AddProjects = () => {
+  const [topics, setTopics] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [newTopic, setNewTopic] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+
+  useAuthRedirect()
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const projectSnap = await getDocs(collection(db, "Projects"));
-      setDetailedProjects(projectSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-      setProjects(projectSnap.docs.map(doc => doc.data().topic));
+    const fetchTopics = async () => {
+      const querySnapshot = await getDocs(collection(db, "Projects"));
+      const topicData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTopics(topicData);
     };
 
-    const fetchResearchers = async () => {
-      const researcherSnap = await getDocs(collection(db, "researchers"));
-      const tempResearchers = researcherSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-      // sort tempResearchers on name
-      tempResearchers.sort((a, b) => a.name.localeCompare(b.name));
-      setResearchers(tempResearchers);
-    };
-
-    fetchProjects();
-    fetchResearchers();
+    fetchTopics();
   }, []);
 
-  useEffect(() => {
-    if (selectedTopic && projects.includes(selectedTopic)) {
-      detailedProjects.forEach(p => {
-        if (p.topic === selectedTopic) {
-          setTopics(p.topics);
-          setNewTopicDescription(p.description);
-        }
-      })
-    }
-  }, [selectedTopic, projects, detailedProjects])
-
-  const handleAddTopic = () => {
-    setTopics([...topics, { name: "", associatedMembers: [] }]);
+  const handleSelectTopic = (_, value) => {
+    setSelectedTopic(value);
+    setShortDescription(value?.short_description || "");
+    setNewTopic(value?.topic_title || "");
   };
 
-  const handleRemoveTopic = (index) => {
-    setTopics(topics.filter((_, i) => i !== index));
-  };
+  const handleAddTopic = async () => {
+    if (!newTopic.trim() || !shortDescription.trim()) return;
 
-  const handleTopicChange = (index, value) => {
-    const updatedTopics = [...topics];
-    updatedTopics[index].name = value;
-    setTopics(updatedTopics);
-  };
+    Swal.fire({
+      title: "Add New Topic",
+      text: "Are you sure you want to add this topic?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Add",
+    }).then(async (result) => {
+      if (!result.isConfirmed) return;
 
-  const handleAddMember = (topicIndex) => {
-    const updatedTopics = [...topics];
-    updatedTopics[topicIndex].associatedMembers.push({ id: "", name: "", profilePhoto: "" });
-    setTopics(updatedTopics);
-  };
+      try {
+        const docRef = await addDoc(collection(db, "Projects"), {
+          topic_title: newTopic,
+          short_description: shortDescription,
+        });
 
-  const handleRemoveMember = (topicIndex, memberIndex) => {
-    const updatedTopics = [...topics];
-    updatedTopics[topicIndex].associatedMembers.splice(memberIndex, 1);
-    setTopics(updatedTopics);
-  };
+        setTopics([...topics, { id: docRef.id, topic_title: newTopic, short_description: shortDescription }]);
+        setSelectedTopic(null);
+        setNewTopic("");
+        setShortDescription("");
 
-  const handleMemberChange = (topicIndex, memberIndex, memberId) => {
-    const member = researchers.find(res => res.id === memberId);
-    if (!member) return;
-
-    const updatedTopics = [...topics];
-    updatedTopics[topicIndex].associatedMembers[memberIndex] = {
-      id: member.id,
-      name: member.name,
-      profilePhoto: member.profilePhoto
-    };
-    setTopics(updatedTopics);
-  };
-
-  const handleSubmit = async () => {
-    setLoading(true);
-    if (!selectedTopic) return;
-
-
-    const projectData = {
-      topic: selectedTopic,
-      description: newTopicDescription,
-      topics: topics
-    };
-    let id = ""
-    if (selectedTopic && projects.includes(selectedTopic)) {
-      detailedProjects.forEach(p => {
-        if (p.topic === selectedTopic) {
-          id = p.id
-        }
-      })
-      await updateDoc(doc(db, "Projects", id), projectData);
-    }
-    else {
-      await addDoc(collection(db, "Projects"), projectData);
-    }
-    Swal.fire("Success", "New Topic Added!", "success").then(() => {
-      // window.location.reload();
+        Swal.fire("Success", "Topic added successfully!", "success");
+      } catch (error) {
+        Swal.fire("Error", error.message, "error");
+      }
     });
-    setSelectedTopic(null);
-    setNewTopicDescription("");
-    setTopics([]);
-    setLoading(false)
   };
 
+  const handleUpdateTopic = async () => {
+    if (!selectedTopic?.id || !newTopic.trim() || !shortDescription.trim()) return;
 
+    Swal.fire({
+      title: "Update Topic",
+      text: "Are you sure you want to update this topic?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Update",
+    }).then(async (result) => {
+      if (!result.isConfirmed) return;
+
+      try {
+        await updateDoc(doc(db, "Projects", selectedTopic.id), {
+          topic_title: newTopic,
+          short_description: shortDescription,
+        });
+
+        setTopics(
+          topics.map((t) =>
+            t.id === selectedTopic.id ? { ...t, topic_title: newTopic, short_description: shortDescription } : t
+          )
+        );
+
+        Swal.fire("Success", "Topic updated successfully!", "success");
+      } catch (error) {
+        Swal.fire("Error", error.message, "error");
+      }
+    });
+  };
+
+  const handleDelete = async () => {
+    if (!selectedTopic?.id) return;
+
+    Swal.fire({
+      title: "Delete Topic",
+      text: "Are you sure you want to delete this topic?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      confirmButtonColor: "#d33",
+    }).then(async (result) => {
+      if (!result.isConfirmed) return;
+
+      try {
+        await deleteDoc(doc(db, "Projects", selectedTopic.id));
+
+        setTopics(topics.filter((t) => t.id !== selectedTopic.id));
+        setSelectedTopic(null);
+        setNewTopic("");
+        setShortDescription("");
+
+        Swal.fire("Deleted", "Project topic has been deleted!", "success");
+      } catch (error) {
+        Swal.fire("Error", error.message, "error");
+      }
+    });
+  };
 
   return (
-    <Box className="row mx-10 d-flex justify-content-center align-items-center min-h-[95vh] space-y-5">
-      <Typography variant="h4">Add a Project Topic</Typography>
-      <Autocomplete
-        options={projects}
-        freeSolo
-        onInputChange={(_, newValue) => setSelectedTopic(newValue)}
-        renderInput={(params) => <TextField {...params} label="Project Topic" fullWidth />}
-      />
-      <TextField
-        label="Short Description"
-        fullWidth
-        className="mt-3"
-        multiline
-        rows={5}
-        value={newTopicDescription}
-        onChange={(e) => setNewTopicDescription(e.target.value)}
-      />
-      <Button variant="outlined" className="mt-3" onClick={handleAddTopic}>Add Topic</Button>
-      {topics.map((topic, index) => (
-        <Box key={index} className="mt-5 p-3 border rounded-lg">
-          <TextField
-            label="Subtopic Name"
-            fullWidth
-            value={topic.name}
-            onChange={(e) => handleTopicChange(index, e.target.value)}
-          />
-          <Typography variant="h6" className="mt-3">Associated Members</Typography>
-          {topic.associatedMembers.map((member, memberIndex) => (
-            <Box key={memberIndex} display="flex" alignItems="center" gap={2} className="mb-3">
-              <Avatar src={member.profilePhoto} alt={member.name} />
-              <FormControl fullWidth>
-                <InputLabel>Select Member</InputLabel>
-                <Select
-                  value={member.id}
-                  onChange={(e) => handleMemberChange(index, memberIndex, e.target.value)}
-                >
-                  {researchers.map(res => (
-                    <MenuItem key={res.id} value={res.id}>  {res.name}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <IconButton color="error" onClick={() => handleRemoveMember(index, memberIndex)}>
-                <Delete />
-              </IconButton>
-            </Box>
-          ))}
-          <Box className="space-x-4">
-            <Button variant="outlined" onClick={() => handleAddMember(index)}>Add Member</Button>
-            <Button variant="contained" color="error" onClick={() => handleRemoveTopic(index)}>Remove Subtopic</Button>
-          </Box>
+    <div className="w-full space-y-4 min-h-[95vh]">
+      <Box className=" mx-7 mb-2 shadow rounded p-5">
+        <Typography variant="h3">Add/Update Project Topic Info</Typography>
+        <Autocomplete
+          options={topics}
+          getOptionLabel={(option) => option.topic_title}
+          freeSolo
+          className="mt-5"
+          onInputChange={(_, value) => setNewTopic(value)}
+          onChange={handleSelectTopic}
+          renderInput={(params) => <TextField {...params} label="Project Topic" fullWidth />}
+        />
 
+        <Editor editorTitle="Short Description" value={shortDescription} updateHTMLContent={setShortDescription} />
 
-        </Box>
-      ))}
-      <Box className="w-full pb-5">
-        <Button variant="contained" color="primary" className=" mx-auto" onClick={handleSubmit}>{loading ? "Submitting Project" : "Submit Project"}</Button>
+        {/* {selectedTopic?.id && (
+          
+        )} */}
+
+        <div className="flex justify-around w-full mt-4">
+          {!selectedTopic?.id ? (
+            <Button variant="contained" color="primary" onClick={handleAddTopic} disabled={!newTopic || !shortDescription}>
+              Add Topic
+            </Button>
+          ) : (
+            <>
+              <Button className="w-[30%]"
+                variant="contained"
+                color="primary"
+                onClick={() => navigate(`/update/subtopics/${selectedTopic.id}`)}
+              >
+                Update Topic List
+              </Button>
+              <Button className="w-[30%]" variant="contained" color="primary" onClick={handleUpdateTopic} disabled={!newTopic || !shortDescription}>
+                Update Topic
+              </Button>
+
+              <Button className="w-[30%]" variant="contained" color="error" onClick={handleDelete}>
+                Delete Topic
+              </Button>
+            </>
+          )}
+        </div>
 
       </Box>
-
-
-    </Box>
+    </div>
   );
 };
 
-export default AddProject;
+export default AddProjects;

@@ -17,7 +17,7 @@ const UpdateSinglePublication = () => {
     const [updating, setUpdating] = useState(false);
     const [researchers, setResearchers] = useState([]);
 
-    
+
     useAuthRedirect();
 
     useEffect(() => {
@@ -98,30 +98,30 @@ const UpdateSinglePublication = () => {
             </FormControl>
 
             <TextField
-    label="Publication Date"
-    type="date"
-    fullWidth
-    name="publicationDate"
-    value={
-        publication.publicationDate
-            ? new Date(
-                  typeof publication.publicationDate === "string"
-                      ? publication.publicationDate
-                      : publication.publicationDate.seconds
-                      ? publication.publicationDate.seconds * 1000
-                      : publication.publicationDate
-              )
-                  .toISOString()
-                  .split("T")[0]
-            : ""
-    }
-    onChange={(e) =>
-        setPublication({
-            ...publication,
-            publicationDate: new Date(e.target.value).getTime(),
-        })
-    }
-/>
+                label="Publication Date"
+                type="date"
+                fullWidth
+                name="publicationDate"
+                value={
+                    publication.publicationDate
+                        ? new Date(
+                            typeof publication.publicationDate === "string"
+                                ? publication.publicationDate
+                                : publication.publicationDate.seconds
+                                    ? publication.publicationDate.seconds * 1000
+                                    : publication.publicationDate
+                        )
+                            .toISOString()
+                            .split("T")[0]
+                        : ""
+                }
+                onChange={(e) =>
+                    setPublication({
+                        ...publication,
+                        publicationDate: new Date(e.target.value).getTime(),
+                    })
+                }
+            />
 
 
 

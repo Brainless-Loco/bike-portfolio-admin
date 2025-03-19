@@ -25,6 +25,7 @@ import VacancyForm from './Pages/AddNew/Vacancy/VacancyForm';
 import VacancyList from './Pages/Others/Applications/VacancyList'
 import ApplicantDetails from './Pages/Others/Applications/ApplicantDetails';
 import ApplicationsList from './Pages/Others/Applications/ApplicationsList';
+import UpdateSubtopics from './Pages/AddNew/Project/UpdateSubtopics';
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
             <Route path='/update/publications/:id' element={<UpdateSignlePublication/>}/>
 
             <Route path='/update/projects' element={<UpdateProjects/>}/>
+            <Route path="/update/subtopics/:id" element={<UpdateSubtopics />} />
 
 
             {/* Others */}
