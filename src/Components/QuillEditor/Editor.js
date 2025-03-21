@@ -4,6 +4,7 @@ import "quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import './editor.css'
 
 // Register ImageResize only once globally
 if (!Quill.imports["modules/imageResize"]) {
@@ -61,6 +62,8 @@ export default function Editor({ editorTitle, updateHTMLContent, value = "" }) {
     quillRef.current = quill;
     isMounted.current = true;
     quill.root.innerHTML = value;
+
+    
   }, [updateHTMLContent, value]);
 
   useEffect(() => {
