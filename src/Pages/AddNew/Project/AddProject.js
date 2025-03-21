@@ -12,12 +12,14 @@ import { db } from "../../../Utils/Firebase/Firebase";
 import Editor from "../../../Components/QuillEditor/Editor";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 import { Helmet } from "react-helmet-async";
+import MemberList from "../../../Components/Projects/MemberList";
 
 const AddProjects = () => {
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [newTopic, setNewTopic] = useState("");
   const [shortDescription, setShortDescription] = useState("");
+  const [members, setMembers] = useState([]);
 
   useAuthRedirect()
 
@@ -40,6 +42,7 @@ const AddProjects = () => {
     setSelectedTopic(value);
     setShortDescription(value?.short_description || "");
     setNewTopic(value?.topic_title || "");
+    setMembers(value?.associated_members || [])
   };
 
   const handleAddTopic = async () => {
@@ -58,11 +61,15 @@ const AddProjects = () => {
         const docRef = await addDoc(collection(db, "Projects"), {
           topic_title: newTopic,
           short_description: shortDescription,
+          associated_members: members,
         });
 
-        setTopics([...topics, { id: docRef.id, topic_title: newTopic, short_description: shortDescription }]);
+        setTopics([...topics, { id: docRef.id, topic_title: newTopic, short_description: shortDescription,
+          associated_members: members,
+         }]);
         setSelectedTopic(null);
         setNewTopic("");
+        setMembers([])
         setShortDescription("");
 
         Swal.fire("Success", "Topic added successfully!", "success");
@@ -88,11 +95,14 @@ const AddProjects = () => {
         await updateDoc(doc(db, "Projects", selectedTopic.id), {
           topic_title: newTopic,
           short_description: shortDescription,
+          associated_members: members,
         });
 
         setTopics(
           topics.map((t) =>
-            t.id === selectedTopic.id ? { ...t, topic_title: newTopic, short_description: shortDescription } : t
+            t.id === selectedTopic.id ? { ...t, topic_title: newTopic, short_description: shortDescription, 
+              associated_members: members,
+             } : t
           )
         );
 
@@ -149,12 +159,11 @@ const AddProjects = () => {
           renderInput={(params) => <TextField {...params} label="Project Topic" fullWidth />}
         />
 
+        <MemberList members={members} setMembers={setMembers} />
+
         <Editor editorTitle="Short Description" value={shortDescription} updateHTMLContent={setShortDescription} />
 
-        {/* {selectedTopic?.id && (
-          
-        )} */}
-
+        
         <div className="flex justify-around w-full mt-4">
           {!selectedTopic?.id ? (
             <Button variant="contained" color="primary" onClick={handleAddTopic} disabled={!newTopic || !shortDescription}>

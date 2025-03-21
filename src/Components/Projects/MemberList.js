@@ -8,7 +8,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import { Delete } from "@mui/icons-material";
+import Delete from "@mui/icons-material/Delete";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../Utils/Firebase/Firebase";
 
@@ -18,11 +18,19 @@ const MemberList = ({ members, setMembers }) => {
   useEffect(() => {
     const fetchResearchers = async () => {
       const querySnapshot = await getDocs(collection(db, "researchers"));
-      const data = querySnapshot.docs.map((doc) => ({
+      let data = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      // sort data on name field
+      data = data.map((res) => ({
+        name: res.name,
+        id: res.id,
+        profilePhoto: res.profilePhoto,
+      }));
+
+      // filter out former researchers from list, sort by name
+
+      // take only name, id, profilePhoto
       data.sort((a, b) => a.name.localeCompare(b.name));
 
       setResearchers(data.filter((res) =>!res.isFormer));
