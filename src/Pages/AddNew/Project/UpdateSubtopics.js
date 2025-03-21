@@ -16,6 +16,7 @@ const UpdateSubtopics = () => {
     const [subtopicTitle, setSubtopicTitle] = useState("");
     const [description, setDescription] = useState("");
     const [members, setMembers] = useState([]);
+    const [serial, setSerial] = useState("")
     
     useAuthRedirect()
 
@@ -37,6 +38,7 @@ const UpdateSubtopics = () => {
         setSubtopicTitle(value?.subtopic_title || "");
         setDescription(value?.description || "");
         setMembers(value?.associated_members || []);
+        setSerial(value?.serial || "");
     };
 
     const handleAddSubtopic = async () => {
@@ -56,13 +58,15 @@ const UpdateSubtopics = () => {
                     subtopic_title: subtopicTitle,
                     description,
                     associated_members: members,
+                    serial:serial
                 });
 
-                setSubtopics([...subtopics, { id: docRef.id, subtopic_title: subtopicTitle, description, associated_members: members }]);
+                setSubtopics([...subtopics, { id: docRef.id, subtopic_title: subtopicTitle, description, associated_members: members, serial: serial}]);
                 setSelectedSubtopic(null);
                 setSubtopicTitle("");
                 setDescription("");
                 setMembers([]);
+                setSerial("")
 
                 Swal.fire("Success", "Subtopic added successfully!", "success");
             } catch (error) {
@@ -88,11 +92,14 @@ const UpdateSubtopics = () => {
                     subtopic_title: subtopicTitle,
                     description,
                     associated_members: members,
+                    serial: serial
                 });
 
                 setSubtopics(
                     subtopics.map((s) =>
-                        s.id === selectedSubtopic.id ? { ...s, subtopic_title: subtopicTitle, description, associated_members: members } : s
+                        s.id === selectedSubtopic.id ? { ...s, subtopic_title: subtopicTitle, description, associated_members: members,
+                            serial: serial
+                         } : s
                     )
                 );
 
@@ -124,6 +131,7 @@ const UpdateSubtopics = () => {
                 setSubtopicTitle("");
                 setDescription("");
                 setMembers([]);
+                setSerial("")
 
                 Swal.fire("Deleted", "Subtopic has been deleted!", "success");
             } catch (error) {
@@ -148,6 +156,12 @@ const UpdateSubtopics = () => {
                     onChange={handleSelectSubtopic}
                     renderInput={(params) => <TextField {...params} label="Subtopic Title" fullWidth />}
                 />
+                {/* number type input field for serial */}
+                <TextField type="number" label="Serial Number" fullWidth  value={serial}
+                   onChange={
+                     e => setSerial(e.target.value)
+                   }
+                   />
 
                 <Editor editorTitle="Description" value={description} updateHTMLContent={setDescription} />
 
