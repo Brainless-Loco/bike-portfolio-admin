@@ -26,6 +26,8 @@ import VacancyList from './Pages/Others/Applications/VacancyList'
 import ApplicantDetails from './Pages/Others/Applications/ApplicantDetails';
 import ApplicationsList from './Pages/Others/Applications/ApplicationsList';
 import UpdateSubtopics from './Pages/AddNew/Project/UpdateSubtopics';
+import ManageActivities from './Pages/Update/Activity/ManageActivities';
+import UpdateActivityPage from './Pages/Update/Activity/UpdateActivityPage';
 
 function App() {
   return (
@@ -64,6 +66,10 @@ function App() {
 
             <Route path='/update/projects' element={<UpdateProjects/>}/>
             <Route path="/update/subtopics/:id" element={<UpdateSubtopics />} />
+
+            
+            <Route path='/update/activities' element={<ManageActivities/>}/>
+            <Route path='/update/activities/:id' element={<UpdateActivityPage/>}/>
 
 
             {/* Others */}

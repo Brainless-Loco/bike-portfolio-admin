@@ -12,14 +12,15 @@ const routes = {
     // { path: "/add-new/teaching-courses", label: "Add Teaching Course" },
     { path: "/add-new/partner", label: "Partner" },
     { path: "/add-new/project", label: "Project" },
-    { path: "/add-new/dataset", label: "Dataset" },
+    // { path: "/add-new/dataset", label: "Dataset" },
     { path: "/add-new/vacancy", label: "Vacancy" },
   ],
   update: [
-    { path: "/update", label: "Update Basic Info" },
+    // { path: "/update", label: "Update Basic Info" },
     { path: "/update/researchers", label: "Researchers" },
-    { path: "/update/projects", label: "Projects" },
+    { path: "/update/activities", label: "Activities" },
     { path: "/update/publications", label: "Publications" },
+    { path: "/update/projects", label: "Projects" },
     { path: "/update/vacancy", label: "Vacancy" },
   ],
   others:[
