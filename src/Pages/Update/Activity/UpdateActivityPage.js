@@ -12,6 +12,7 @@ import LabelsInput from "../../../Components/Input/LabelsInput";
 import ExternalLinks from "../../../Components/Input/ExternalLinksInput";
 import ShortDescription from "../../../Components/Input/ShortDescription";
 import Editor from "../../../Components/QuillEditor/Editor";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const UpdateActivityPage = () => {
   const { id } = useParams();
@@ -24,6 +25,9 @@ const UpdateActivityPage = () => {
   const [labels, setLabels] = useState([]);
   const [externalLinks, setExternalLinks] = useState([]);
   const [activityDate, setActivityDate] = useState("");
+
+
+  useAuthRedirect()
 
   useEffect(() => {
     const fetchActivity = async () => {

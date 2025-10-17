@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import { addDoc, collection, getFirestore, Timestamp } from "firebase/firestore";
 import { app } from "../../../Utils/Firebase/Firebase";
 import Editor from "../../../Components/QuillEditor/Editor";
 import LabelsInput from "../../../Components/Input/LabelsInput";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const AddDataset = () => {
   const [title, setTitle] = useState("");
@@ -11,6 +15,8 @@ const AddDataset = () => {
   const [labels, setLabels] = useState([]);
   const [link, setLink] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useAuthRedirect();
 
   const handleSubmit = async () => {
     if (!title.trim() || !link.trim()) {

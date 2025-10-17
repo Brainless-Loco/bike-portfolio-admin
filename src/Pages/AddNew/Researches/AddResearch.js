@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextField, Typography, MenuItem, Select, FormControl, InputLabel, Avatar } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Avatar from "@mui/material/Avatar";
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { app } from "./../../../Utils/Firebase/Firebase";
 import SubmissionModal from "../../../Components/Modal/SubmissionModal";
 import LongDescription from "../../../Components/Input/LongDescription";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const AddResearch = () => {
   const [title, setTitle] = useState("");
@@ -17,6 +26,8 @@ const AddResearch = () => {
   const [researchers, setResearchers] = useState([]);
 
   const db = getFirestore(app);
+
+  useAuthRedirect();
 
   useEffect(() => {
     const fetchResearchers = async () => {

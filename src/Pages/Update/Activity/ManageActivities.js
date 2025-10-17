@@ -7,12 +7,15 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Swal from "sweetalert2";
 import { db } from "../../../Utils/Firebase/Firebase";
 import ActivityCard from "./ActivityCard";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const ManageActivities = () => {
     const [activities, setActivities] = useState([]);
     const [filteredActivities, setFilteredActivities] = useState([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
+
+    useAuthRedirect();
 
     useEffect(() => {
         const fetchActivities = async () => {

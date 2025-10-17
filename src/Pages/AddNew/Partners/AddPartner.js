@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { addDoc, collection, getFirestore, Timestamp } from "firebase/firestore";
 import { app } from "../../../Utils/Firebase/Firebase";
 import SubmissionModal from "../../../Components/Modal/SubmissionModal";
 import LongDescription from "../../../Components/Input/LongDescription";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const AddPartner = () => {
   const [partnerTitle, setPartnerTitle] = useState("");
@@ -11,6 +15,8 @@ const AddPartner = () => {
   const [endDateOfPartnership, setEndDateOfPartnership] = useState("");
   const [longDescription, setLongDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useAuthRedirect();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
