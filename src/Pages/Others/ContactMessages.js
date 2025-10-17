@@ -3,7 +3,8 @@ import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../Utils/Firebase/Firebase";
 import ContactMessageModal from "../../Components/Modal/ContactMessageModal";
 import ContactMessageCard from "../../Components/ContactMessages/ContactMessageCard";
-import { Box, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Swal from "sweetalert2";
 import useAuthRedirect from "../../Components/Auth/useAuthRedirect";
 

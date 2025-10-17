@@ -3,7 +3,9 @@ import { collection, getDocs } from "firebase/firestore";
 import CircularProgress from "@mui/material/CircularProgress";
 import { db } from "../../../Utils/Firebase/Firebase";
 import SingleResearcher from "../../../Components/Update/Researchers/SingleResearcher";
-import { Box, Typography, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const UpdateResearchersList = () => {

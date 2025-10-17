@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography, Autocomplete } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Autocomplete from "@mui/material/Autocomplete";
 import { addDoc, collection, getFirestore, Timestamp } from "firebase/firestore";
 import { app } from "../../../../Utils/Firebase/Firebase";
 import SubmissionModal from "../../../../Components/Modal/SubmissionModal";

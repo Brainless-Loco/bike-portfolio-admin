@@ -12,6 +12,7 @@ import Editor from "../../../Components/QuillEditor/Editor";
 import { Helmet } from 'react-helmet-async';
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const ResearcherProfileForm = () => {
   const [profilePhoto, setProfilePhoto] = useState(null);
@@ -21,6 +22,8 @@ const ResearcherProfileForm = () => {
   const [shortDescription, setShortDescription] = useState("");
   const [broadDescription, setBroadDescription] = useState("");
   const [isFormer, setIsFormer] = useState(false);
+
+  useAuthRedirect();
 
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];

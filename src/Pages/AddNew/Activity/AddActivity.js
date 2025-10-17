@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Box, Button, FormControl, FormLabel, TextField, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 import LabelsInput from "../../../Components/Input/LabelsInput";
 import ExternalLinks from "../../../Components/Input/ExternalLinksInput";
 import ShortDescription from '../../../Components/Input/ShortDescription';
@@ -7,6 +12,7 @@ import SubmissionModal from '../../../Components/Modal/SubmissionModal';
 import { addDoc, collection, getFirestore, Timestamp } from "firebase/firestore";
 import { app } from './../../../Utils/Firebase/Firebase';
 import LongDescription from "../../../Components/Input/LongDescription";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const AddActivity = () => {
   const [title, setTitle] = useState('')
@@ -16,6 +22,8 @@ const AddActivity = () => {
   const [labels, setLabels] = useState([])
   const [externalLinks, setExternalLinks] = useState([])
   const [activityDate, setActivityDate] = useState();
+
+  useAuthRedirect();
 
 
 

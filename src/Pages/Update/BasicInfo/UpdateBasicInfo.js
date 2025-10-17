@@ -1,10 +1,14 @@
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
+import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 
 const UpdateBasicInfo = () => {
+  useAuthRedirect();
   return (
-    <Box className="row mx-10 d-flex justify-content-center align-items-center" sx={{minHeight:'90vh'}}>
+    <Box className="row mx-10 d-flex justify-content-center align-items-center" sx={{ minHeight: '90vh' }}>
       <Typography variant="h3" className="text-center pb-10">
         Update Basic Information
       </Typography>

@@ -81,7 +81,7 @@ const UpdateSingleResearcherInfo = () => {
             <Typography variant="h5">Update Info for "<i>{researcher.name}</i>"</Typography>
 
             {/* Profile Photo */}
-            <CardMedia component="img" sx={{ objectFit: 'contain', height: '200px', mb:2 }} image={newPhoto ? URL.createObjectURL(newPhoto) : researcher.profilePhoto} alt="Profile" />
+            <CardMedia component="img" sx={{ objectFit: 'contain', height: '200px', mb: 2 }} image={newPhoto ? URL.createObjectURL(newPhoto) : researcher.profilePhoto} alt="Profile" />
             {/* Hidden File Input */}
             <input
                 type="file"
@@ -91,11 +91,11 @@ const UpdateSingleResearcherInfo = () => {
                 onChange={(e) => setNewPhoto(e.target.files[0])}
             />
             {/* MUI Upload Button */}
-            <label htmlFor="upload-profile-photo">
+            <label htmlFor="upload-profile-photo" className="w-full flex justify-center">
                 <Button
                     variant="contained"
                     component="span"
-                    className="w-1/3"
+                    className="w-1/3 bg-cyan-500"
                     mt={2}
                 >
                     Upload New Photo

@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { Box, Typography, TextField, FormControl } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
 import CircularProgress from "@mui/material/CircularProgress";
 import { db } from "../../../Utils/Firebase/Firebase";
 import SinglePublication from "../../../Components/Update/Publications/SinglePublication";
