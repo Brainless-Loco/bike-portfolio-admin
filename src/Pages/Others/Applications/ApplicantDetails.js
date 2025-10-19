@@ -46,19 +46,126 @@ const ApplicantDetails = () => {
       setModalType("other");
       return;
     }
-    const lower = url.toLowerCase();
-    if (lower.includes(".pdf")) {
-      setSelectedDocUrl(url);
-      setModalType("pdf");
-    } else {
-      setSelectedDocUrl(url);
-      setModalType("other");
-    }
+    // const lower = url.toLowerCase();
+    // Try to check if it's a PDF by fetching headers
+    setSelectedDocUrl(url);
+    setModalType("other");
   };
 
   const closeModal = () => {
     setSelectedDocUrl(null);
     setModalType(null);
+  };
+
+  // helper to render the new documents structure
+  const renderDocuments = (docs = {}) => {
+    if (!docs || Object.keys(docs).length === 0) return "—";
+
+    return (
+      <div className="space-y-4">
+        {/* applicationDocs: simple key -> url map */}
+        {docs.applicationDocs && Object.keys(docs.applicationDocs).length > 0 && (
+          <div>
+            <div className="font-medium mb-2">Application documents</div>
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(docs.applicationDocs).map(([key, url]) => (
+                <Button
+                  key={key}
+                  variant={url ? "contained" : "text"}
+                  size="small"
+                  onClick={() => openDocument(url)}
+                  className="capitalize"
+                >
+                  {key.replace(/[_\-]/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2")}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* otherDocs: array of { title, url } */}
+        {Array.isArray(docs.otherDocs) && docs.otherDocs.length > 0 && (
+          <div>
+            <div className="font-medium mb-2">Other documents</div>
+            <Table size="small" className="w-full">
+              <TableHead>
+                <TableRow>
+                  <TableCell className="font-semibold text-sm border border-gray-200 p-1">Title</TableCell>
+                  <TableCell className="font-semibold text-sm border border-gray-200 p-1">File</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {docs.otherDocs.map((d, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="text-sm border border-gray-200 p-1">{d?.title || `Document ${i + 1}`}</TableCell>
+                    <TableCell className="text-sm border border-gray-200 p-1">
+                      {d?.url ? (
+                        <Button size="small" variant="contained" onClick={() => openDocument(d.url)}>
+                          View
+                        </Button>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+
+        {/* references: array of urls */}
+        {Array.isArray(docs.references) && docs.references.length > 0 && (
+          <div>
+            <div className="font-medium mb-2">References</div>
+            <div className="flex flex-wrap gap-2">
+              {docs.references.map((url, i) => (
+                <Button key={i} size="small" variant={url ? "contained" : "text"} onClick={() => openDocument(url)}>
+                  Reference {i + 1}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* publications: array of { title, file, coAuthorStatement } */}
+        {Array.isArray(docs.publications) && docs.publications.length > 0 && (
+          <div>
+            <div className="font-medium mb-2">Publications</div>
+            <Table size="small" className="w-full">
+              <TableHead>
+                <TableRow>
+                  <TableCell className="font-semibold text-sm border border-gray-200 p-1">Title</TableCell>
+                  <TableCell className="font-semibold text-sm border border-gray-200 p-1">File</TableCell>
+                  <TableCell className="font-semibold text-sm border border-gray-200 p-1">Co-author statement</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {docs.publications.map((p, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="text-sm border border-gray-200 p-1">{p?.title || `Publication ${i + 1}`}</TableCell>
+                    <TableCell className="text-sm border border-gray-200 p-1">
+                      {p?.file ? (
+                        <Button size="small" variant="contained" onClick={() => openDocument(p.file)}>View</Button>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>
+                    <TableCell className="text-sm border border-gray-200 p-1">
+                      {p?.coAuthorStatement ? (
+                        <Button size="small" variant="contained" onClick={() => openDocument(p.coAuthorStatement)}>View</Button>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
+    );
   };
 
   const formatTimestamp = (ts) => {
@@ -78,8 +185,8 @@ const ApplicantDetails = () => {
 
   const email = applicant.personalData?.email || "";
   const mobile = applicant.personalData?.mobile || "";
-  const termsAccepted = !!applicant.termsAccepted;
-
+  const termsAccepted = !!applicant.personalData?.termsAccepted;
+  
   return (
     <Box className="border p-3 my-3 bg-white rounded shadow min-h-[95vh]">
       <Typography className="text-[#0c2461] pb-3" variant="h3">Applicant Details</Typography>
@@ -165,16 +272,11 @@ const ApplicantDetails = () => {
               </TableCell>
             </TableRow>
 
+            {/* Documents row - uses renderDocuments helper */}
             <TableRow>
               <TableCell className="font-semibold text-base border border-gray-200 p-2 align-top">Documents</TableCell>
               <TableCell className="text-base border border-gray-200 p-2 align-top">
-                {applicant.documents && Object.keys(applicant.documents).length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {Object.entries(applicant.documents).map(([key, url]) => (
-                      <Button key={key} variant="contained" size="small" onClick={() => openDocument(url)}>{key}</Button>
-                    ))}
-                  </div>
-                ) : "—"}
+                {renderDocuments(applicant.documents)}
               </TableCell>
             </TableRow>
 
