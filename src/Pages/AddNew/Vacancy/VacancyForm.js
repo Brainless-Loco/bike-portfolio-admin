@@ -22,6 +22,8 @@ const VacancyForm = () => {
     const [positionTypes, setPositionTypes] = useState([]);
     const [positionNames, setPositionNames] = useState([]);
     const [existingVacancyId, setExistingVacancyId] = useState(null);
+    const [is_accepting, setIsAccepting] = useState(true);
+    const [vacancyTrackNo, setVacancyTrackNo] = useState("");
 
     useAuthRedirect();
 
@@ -30,39 +32,39 @@ const VacancyForm = () => {
             const querySnapshot = await getDocs(collection(db, "Vacancies"));
             let types = new Set();
             let vacancies = [];
-    
+
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 types.add(data.position_type);
                 vacancies.push({ id: doc.id, ...data });
             });
-    
+
             setAllVacancies(vacancies);
             setPositionTypes(Array.from(types));
         };
-    
+
         fetchData();
     }, []); // Fetch only once
-    
+
     useEffect(() => {
         // Filter position names based on the selected positionType
         if (positionType) {
             const filteredNames = allVacancies
                 .filter((vac) => vac.position_type === positionType)
                 .map((vac) => vac.position_name);
-            
+
             setPositionNames([...new Set(filteredNames)]); // Ensure unique names
         } else {
             setPositionNames([]);
         }
     }, [positionType, allVacancies]);
-    
+
     useEffect(() => {
         // Find existing vacancy based on selected positionType & positionName
         const existingVacancy = allVacancies.find(
             (vac) => vac.position_type === positionType && vac.position_name === positionName
         );
-    
+
         if (existingVacancy) {
             setExistingVacancyId(existingVacancy.id);
             setApplicationDeadline(existingVacancy.application_deadline);
@@ -70,6 +72,8 @@ const VacancyForm = () => {
             setBroadDescription(existingVacancy.broad_description);
             setRequirements(existingVacancy.requirements);
             setTotalVacancy(existingVacancy.total_vacancy);
+            setIsAccepting(existingVacancy.is_accepting);
+            setVacancyTrackNo(existingVacancy.vacancy_track_no ?? "");
         } else {
             setExistingVacancyId(null);
             setApplicationDeadline("");
@@ -77,15 +81,17 @@ const VacancyForm = () => {
             setBroadDescription("");
             setRequirements("");
             setTotalVacancy("");
+            setIsAccepting(true);
+            setVacancyTrackNo("");
         }
-    }, [positionType, positionName, allVacancies]);    
+    }, [positionType, positionName, allVacancies]);
 
     const handleDeleteVacancy = async () => {
         if (!existingVacancyId) {
             Swal.fire("Error", "No vacancy selected to delete.", "error");
             return;
         }
-    
+
         Swal.fire({
             title: "Are you sure?",
             text: "This action cannot be undone!",
@@ -99,7 +105,7 @@ const VacancyForm = () => {
                 try {
                     await deleteDoc(doc(db, "Vacancies", existingVacancyId));
                     Swal.fire("Deleted!", "The vacancy has been deleted.", "success");
-    
+
                     // Update state after deletion
                     setAllVacancies((prevVacancies) => prevVacancies.filter(vac => vac.id !== existingVacancyId));
                     setExistingVacancyId(null);
@@ -116,7 +122,7 @@ const VacancyForm = () => {
             }
         });
     };
-    
+
 
     const handleSubmit = async () => {
         if (!positionType || !positionName || !applicationDeadline || !shortDescription || !broadDescription || !requirements || !totalVacancy) {
@@ -135,6 +141,9 @@ const VacancyForm = () => {
                     broad_description: broadDescription,
                     requirements: requirements,
                     total_vacancy: parseInt(totalVacancy),
+                    is_accepting: is_accepting,
+                    vacancy_track_no: vacancyTrackNo,
+                    
                 });
                 Swal.fire("Success", "Vacancy updated successfully!", "success");
             } else {
@@ -147,6 +156,8 @@ const VacancyForm = () => {
                     broad_description: broadDescription,
                     requirements: requirements,
                     total_vacancy: parseInt(totalVacancy),
+                    is_accepting: is_accepting,
+                    vacancy_track_no: vacancyTrackNo,
                 });
                 Swal.fire("Success", "Vacancy added successfully!", "success");
             }
@@ -193,6 +204,16 @@ const VacancyForm = () => {
                     renderInput={(params) => <TextField {...params} label="Position Name" variant="outlined" />}
                 />
 
+
+
+                <TextField
+                    type="text"
+                    label="Vacancy Track No"
+                    variant="outlined"
+                    value={existingVacancyId || ""}
+                    disabled
+                />
+
                 {/* Application Deadline */}
                 <TextField
                     type="datetime-local"
@@ -202,8 +223,6 @@ const VacancyForm = () => {
                     onChange={(e) => setApplicationDeadline(e.target.value)}
                     InputLabelProps={{ shrink: true }}  // ✅ Forces the label to stay on top
                 />
-
-
                 {/* Total Vacancy */}
                 <TextField
                     type="number"
@@ -213,11 +232,18 @@ const VacancyForm = () => {
                     onChange={(e) => setTotalVacancy(e.target.value)}
                 />
 
+                {/* Is Accepting Applications */}
+                <Autocomplete
+                    options={[true, false]}
+                    value={is_accepting}
+                    onChange={(e, newValue) => {
+                        if (typeof newValue === "boolean") setIsAccepting(newValue);
+                    }}
+                    getOptionLabel={(option) => (option ? "True" : "False")}
+                    renderInput={(params) => <TextField {...params} label="Is Accepting Applications" variant="outlined" />}
+                />
 
             </Box>
-
-
-            {/* Requirements */}
             <Editor id="requirements" editorTitle={"Requirements"} updateHTMLContent={setRequirements} value={requirements} />
 
             {/* Short Description */}
@@ -250,7 +276,7 @@ const VacancyForm = () => {
                     color="error"
                     className="w-[80%] h-12"
                     onClick={handleDeleteVacancy}
-                    sx={{display:existingVacancyId ?"block" :'none'}}
+                    sx={{ display: existingVacancyId ? "block" : 'none' }}
                 >
                     Delete
                 </Button>

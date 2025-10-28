@@ -41,15 +41,15 @@ const ApplicantDetails = () => {
   }, [vacancy_id, applicant_id]);
 
   const openDocument = (url) => {
-    if (!url) {
-      setSelectedDocUrl(null);
-      setModalType("other");
-      return;
-    }
+    // if (!url) {
+    //   setSelectedDocUrl(null);
+    //   setModalType("other");
+    //   return;
+    // }
     // const lower = url.toLowerCase();
     // Try to check if it's a PDF by fetching headers
     setSelectedDocUrl(url);
-    setModalType("other");
+    setModalType("pdf");
   };
 
   const closeModal = () => {
@@ -173,7 +173,7 @@ const ApplicantDetails = () => {
     if (ts.toDate) {
       try {
         return ts.toDate().toString();
-      } catch {}
+      } catch { }
     }
     if (ts.seconds) {
       return new Date(ts.seconds * 1000).toString();
@@ -185,8 +185,8 @@ const ApplicantDetails = () => {
 
   const email = applicant.personalData?.email || "";
   const mobile = applicant.personalData?.mobile || "";
-  const termsAccepted = !!applicant.personalData?.termsAccepted;
-  
+  const termsAccepted = !!applicant?.termsAccepted;
+
   return (
     <Box className="border p-3 my-3 bg-white rounded shadow min-h-[95vh]">
       <Typography className="text-[#0c2461] pb-3" variant="h3">Applicant Details</Typography>
@@ -202,7 +202,7 @@ const ApplicantDetails = () => {
 
           <TableBody>
 
-            <BasicKeyValueTableRow label={"Full Name"} value={(applicant.personalData?.firstName || "") +" " +( applicant.personalData?.lastName || "")}
+            <BasicKeyValueTableRow label={"Full Name"} value={(applicant.personalData?.firstName || "") + " " + (applicant.personalData?.lastName || "")}
             />
 
             <TableRow>
@@ -219,10 +219,10 @@ const ApplicantDetails = () => {
               </TableCell>
             </TableRow>
 
-            <BasicKeyValueTableRow 
+            <BasicKeyValueTableRow
               label={"Address"}
               value={applicant.personalData?.address || "—"}
-              />
+            />
 
             <BasicKeyValueTableRow
               label="Country"
@@ -283,7 +283,7 @@ const ApplicantDetails = () => {
             <TableRow>
               <TableCell className="font-semibold text-base border border-gray-200 p-2 align-top">Terms accepted</TableCell>
               <TableCell className="text-base border border-gray-200 p-2 align-top">
-                {termsAccepted ? "✅ Accepted" : "❌ Not accepted"}
+                {termsAccepted === true ? "✅ Accepted" : "❌ Not accepted"}
               </TableCell>
             </TableRow>
 
@@ -291,9 +291,12 @@ const ApplicantDetails = () => {
         </Table>
       </TableContainer>
 
-      {modalType === "pdf" && selectedDocUrl && <PDFModal pdfUrl={selectedDocUrl} onClose={closeModal} />}
+      {modalType === "pdf" && selectedDocUrl && (
+        
+            <PDFModal pdfUrl={selectedDocUrl} onClose={closeModal} />
+      )}
 
-      <Dialog open={modalType === "other"} onClose={closeModal} maxWidth="md" fullWidth>
+      <Dialog open={modalType === "other"} onClose={closeModal} fullWidth>
         <DialogTitle>Document preview</DialogTitle>
         <DialogContent>
           {selectedDocUrl ? (
