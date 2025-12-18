@@ -22,6 +22,10 @@ const UpdateSinglePublication = () => {
     const { id } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
+    
+    // Check if we're in view mode
+    const isViewMode = new URLSearchParams(location.search).get("mode") === "view";
+    
     const [publication, setPublication] = useState(location.state || null);
     const [loading, setLoading] = useState(!location.state);
     const [updating, setUpdating] = useState(false);
@@ -92,13 +96,37 @@ const UpdateSinglePublication = () => {
 
     return (
         <Box className="p-4 space-y-4">
-            <Typography variant="h4" mb={3}>Update Publication</Typography>
+            <Typography variant="h4" mb={3}>{isViewMode ? "View Publication" : "Update Publication"}</Typography>
 
-            <TextField label="Title" fullWidth name="title" value={publication.title} onChange={handleChange} className="mb-3" />
-            <TextField label="Publisher Title" fullWidth name="publisher.title" value={publication.publisher.title} onChange={handleChange} className="mb-3" />
-            <TextField label="External Link" fullWidth name="publisher.externalLink" value={publication.publisher.externalLink} onChange={handleChange} className="mb-3" />
+            <TextField 
+              label="Title" 
+              fullWidth 
+              disabled={isViewMode}
+              name="title" 
+              value={publication.title} 
+              onChange={handleChange} 
+              className="mb-3" 
+            />
+            <TextField 
+              label="Publisher Title" 
+              fullWidth 
+              disabled={isViewMode}
+              name="publisher.title" 
+              value={publication.publisher.title} 
+              onChange={handleChange} 
+              className="mb-3" 
+            />
+            <TextField 
+              label="External Link" 
+              fullWidth 
+              disabled={isViewMode}
+              name="publisher.externalLink" 
+              value={publication.publisher.externalLink} 
+              onChange={handleChange} 
+              className="mb-3" 
+            />
 
-            <FormControl fullWidth className="mb-3">
+            <FormControl fullWidth className="mb-3" disabled={isViewMode}>
                 <InputLabel>Publication Type</InputLabel>
                 <Select name="publicationType" value={publication.publicationType} onChange={handleChange}>
                     {["Journal", "Conference", "Book", "Book (Chapters)", "Thesis", "Others"].map((type) => (
@@ -111,6 +139,7 @@ const UpdateSinglePublication = () => {
                 label="Publication Date"
                 type="date"
                 fullWidth
+                disabled={isViewMode}
                 name="publicationDate"
                 value={
                     publication.publicationDate
@@ -133,11 +162,10 @@ const UpdateSinglePublication = () => {
                 }
             />
 
-
-
             <TextField
                 label="Other Info"
                 fullWidth
+                disabled={isViewMode}
                 multiline
                 name="otherInfo"
                 value={publication.otherInfo}
@@ -150,25 +178,31 @@ const UpdateSinglePublication = () => {
                 {publication.authors.map((author, index) => (
                     <Box key={index} display="flex" alignItems="center" gap={2} className="mb-3">
                         <Avatar src={author.profilePhoto} alt={author.name} />
-                        <FormControl fullWidth>
+                        <FormControl fullWidth disabled={isViewMode}>
                             <InputLabel>Select Author</InputLabel>
                             <Select value={author.id} onChange={(e) => handleAuthorChange(index, e.target.value)}>
                                 {researchers.map((res) => <MenuItem key={res.id} value={res.id}>{res.name}</MenuItem>)}
                             </Select>
                         </FormControl>
-                        <IconButton color="error" onClick={() => handleRemoveAuthor(index)}>
-                            <Delete />
-                        </IconButton>
+                        {!isViewMode && (
+                          <IconButton color="error" onClick={() => handleRemoveAuthor(index)}>
+                              <Delete />
+                          </IconButton>
+                        )}
                     </Box>
                 ))}
-                <Button variant="outlined" onClick={handleAddAuthor}>Add Author</Button>
+                {!isViewMode && (
+                  <Button variant="outlined" onClick={handleAddAuthor}>Add Author</Button>
+                )}
             </Box>
 
-            <Editor value={publication.longDescription} editorTitle="Publication Details" updateHTMLContent={(val) => setPublication({ ...publication, longDescription: val })} />
+            <Editor value={publication.longDescription} editorTitle="Publication Details" updateHTMLContent={(val) => setPublication({ ...publication, longDescription: val })} readOnly={isViewMode} />
 
-            <Button variant="contained" fullWidth onClick={handleUpdate} disabled={updating}>
-                {updating ? <CircularProgress size={24} /> : "Update"}
-            </Button>
+            {!isViewMode && (
+              <Button variant="contained" fullWidth onClick={handleUpdate} disabled={updating}>
+                  {updating ? <CircularProgress size={24} /> : "Update"}
+              </Button>
+            )}
         </Box>
     );
 };

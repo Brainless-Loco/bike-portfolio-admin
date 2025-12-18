@@ -8,8 +8,9 @@ import Swal from "sweetalert2";
 import { db } from "../../../Utils/Firebase/Firebase";
 import ActivityCard from "./ActivityCard";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
+import { hasAccess, isSuperAdmin, RESOURCE_TYPES } from "../../../Utils/RBAC/rbacUtils";
 
-const ManageActivities = () => {
+const ManageActivities = ({ viewOnly = false }) => {
     const [activities, setActivities] = useState([]);
     const [filteredActivities, setFilteredActivities] = useState([]);
     const [search, setSearch] = useState("");
@@ -23,8 +24,26 @@ const ManageActivities = () => {
                 const q = query(collection(db, "Activities"), orderBy("activityDate", "desc"));
                 const snapshot = await getDocs(q);
                 const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-                setActivities(data);
-                setFilteredActivities(data);
+                
+                // Filter based on user's access
+                let accessibleActivities = data;
+                
+                if (!isSuperAdmin()) {
+                    if (viewOnly) {
+                        // For view mode, filter to activities the user has read access to
+                        accessibleActivities = data.filter(activity => 
+                            hasAccess(RESOURCE_TYPES.ACTIVITIES, "read", activity.id)
+                        );
+                    } else {
+                        // For update mode, filter to activities the user has update access to
+                        accessibleActivities = data.filter(activity => 
+                            hasAccess(RESOURCE_TYPES.ACTIVITIES, "update", activity.id)
+                        );
+                    }
+                }
+                
+                setActivities(accessibleActivities);
+                setFilteredActivities(accessibleActivities);
             } catch (err) {
                 console.error("Error fetching activities:", err);
             } finally {
@@ -33,7 +52,7 @@ const ManageActivities = () => {
         };
 
         fetchActivities();
-    }, []);
+    }, [viewOnly]);
 
     useEffect(() => {
         if (!search.trim()) {
@@ -75,7 +94,7 @@ const ManageActivities = () => {
     return (
         <Box p={4}>
             <Typography variant="h3" color="#0c2461" mb={3}>
-                Manage Activities
+                {viewOnly ? "View Activities" : "Manage Activities"}
             </Typography>
 
             <TextField
@@ -96,6 +115,7 @@ const ManageActivities = () => {
                         key={activity.id}
                         activity={activity}
                         onDelete={handleDelete}
+                        viewOnly={viewOnly}
                     />
                 ))
             )}

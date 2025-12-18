@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -17,6 +17,10 @@ import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 const UpdateActivityPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Check if we're in view mode
+  const isViewMode = new URLSearchParams(location.search).get("mode") === "view";
 
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
@@ -90,7 +94,7 @@ const UpdateActivityPage = () => {
   return (
     <Box p={4}>
       <Typography variant="h3" mb={3} color="#0c2461">
-        Update Activity
+        {isViewMode ? "View Activity" : "Update Activity"}
       </Typography>
 
       <TextField
@@ -98,6 +102,7 @@ const UpdateActivityPage = () => {
         label="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        disabled={isViewMode}
         sx={{ mb: 2 }}
       />
 
@@ -107,20 +112,23 @@ const UpdateActivityPage = () => {
         label="Activity Date"
         value={activityDate}
         onChange={(e) => setActivityDate(e.target.value)}
+        disabled={isViewMode}
         sx={{ mb: 2 }}
         InputLabelProps={{ shrink: true }}
       />
 
-      <LabelsInput labels={labels} label="Labels" onChange={setLabels} />
-      <ExternalLinks externalLinks={externalLinks} onChange={setExternalLinks} />
-      <ShortDescription value={shortDescription} onChange={setShortDescription} />
-       <Editor value={longDescription} editorTitle="Long Description" updateHTMLContent={(val) => setLongDescription(val)} />
+      <LabelsInput labels={labels} label="Labels" onChange={setLabels} readOnly={isViewMode} />
+      <ExternalLinks externalLinks={externalLinks} onChange={setExternalLinks} readOnly={isViewMode} />
+      <ShortDescription value={shortDescription} onChange={setShortDescription} readOnly={isViewMode} />
+       <Editor value={longDescription} editorTitle="Long Description" updateHTMLContent={(val) => setLongDescription(val)} readOnly={isViewMode} />
 
-      <Box textAlign="center" mt={3}>
-        <Button variant="contained" sx={{ width: "50%" }} onClick={handleUpdate}>
-          Update
-        </Button>
-      </Box>
+      {!isViewMode && (
+        <Box textAlign="center" mt={3}>
+          <Button variant="contained" sx={{ width: "50%" }} onClick={handleUpdate}>
+            Update
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

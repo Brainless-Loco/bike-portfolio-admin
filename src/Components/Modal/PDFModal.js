@@ -2,7 +2,6 @@ import React from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 const PDFModal = ({ pdfUrl, onClose }) => {

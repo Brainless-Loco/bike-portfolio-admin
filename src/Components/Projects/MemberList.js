@@ -12,7 +12,7 @@ import Delete from "@mui/icons-material/Delete";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../Utils/Firebase/Firebase";
 
-const MemberList = ({ members, setMembers }) => {
+const MemberList = ({ members, setMembers, readOnly = false }) => {
   const [researchers, setResearchers] = useState([]);
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const MemberList = ({ members, setMembers }) => {
       {members.map((author, index) => (
         <Box key={index} display="flex" alignItems="center" gap={2} className="mb-3">
           <Avatar src={author.profilePhoto} alt={author.name} />
-          <FormControl fullWidth>
+          <FormControl fullWidth disabled={readOnly}>
             <InputLabel>Select Member</InputLabel>
             <Select value={author.id} onChange={(e) => handleAuthorChange(index, e.target.value)}>
               {researchers.map((res) => (
@@ -72,14 +72,18 @@ const MemberList = ({ members, setMembers }) => {
               ))}
             </Select>
           </FormControl>
-          <IconButton color="error" onClick={() => handleRemoveAuthor(index)}>
-            <Delete />
-          </IconButton>
+          {!readOnly && (
+            <IconButton color="error" onClick={() => handleRemoveAuthor(index)}>
+              <Delete />
+            </IconButton>
+          )}
         </Box>
       ))}
-      <Button variant="outlined" onClick={handleAddAuthor}>
-        Add Members
-      </Button>
+      {!readOnly && (
+        <Button variant="outlined" onClick={handleAddAuthor}>
+          Add Members
+        </Button>
+      )}
     </Box>
   );
 };

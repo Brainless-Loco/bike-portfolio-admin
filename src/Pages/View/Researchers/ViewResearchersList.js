@@ -2,20 +2,21 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import CircularProgress from "@mui/material/CircularProgress";
 import { db } from "../../../Utils/Firebase/Firebase";
-import SingleResearcher from "../../../Components/Update/Researchers/SingleResearcher";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
-import { hasAccess, isSuperAdmin, RESOURCE_TYPES } from "../../../Utils/RBAC/rbacUtils";
+import { getCurrentUser, hasAnyAccess, RESOURCE_TYPES } from "../../../Utils/RBAC/rbacUtils";
 
-const UpdateResearchersList = ({ viewOnly = false }) => {
+const ViewResearchersList = () => {
     const [researchers, setResearchers] = useState([]);
     const [filteredResearchers, setFilteredResearchers] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [loading, setLoading] = useState(true);
 
-    
     useAuthRedirect();
 
     useEffect(() => {
@@ -28,13 +29,13 @@ const UpdateResearchersList = ({ viewOnly = false }) => {
                 }));
 
                 // Filter based on user's access to specific researchers
+                const user = getCurrentUser();
                 let accessibleResearchers = data;
                 
-                if (!isSuperAdmin()) {
-                    // Filter to only researchers the user has access to
-                    const operation = viewOnly ? "read" : "update";
+                if (user && !user.isSuperAdmin) {
+                    // Filter to only researchers the user has read access to
                     accessibleResearchers = data.filter(researcher => {
-                        return hasAccess(RESOURCE_TYPES.RESEARCHERS, operation, researcher.id);
+                        return hasAnyAccess(RESOURCE_TYPES.RESEARCHERS, "read");
                     });
                 }
 
@@ -47,7 +48,7 @@ const UpdateResearchersList = ({ viewOnly = false }) => {
                 });
 
                 setResearchers(accessibleResearchers);
-                setFilteredResearchers(accessibleResearchers); // Initialize filtered list
+                setFilteredResearchers(accessibleResearchers);
             } catch (error) {
                 console.error("Error fetching researchers:", error);
             }
@@ -55,7 +56,7 @@ const UpdateResearchersList = ({ viewOnly = false }) => {
         };
 
         fetchResearchers();
-    }, [viewOnly]);
+    }, []);
 
     // Filter researchers when searchQuery changes
     useEffect(() => {
@@ -71,7 +72,7 @@ const UpdateResearchersList = ({ viewOnly = false }) => {
     return (
         <Box mb={2} py={2} className="bg-gray-100 p-4 rounded-lg min-h-[95vh]">
             <Typography variant="h4" textAlign="center" mb={2}>
-                {viewOnly ? "View Team Members" : "Update Team Members Info"}
+                View Team Members
             </Typography>
 
             {/* Search Box */}
@@ -80,17 +81,36 @@ const UpdateResearchersList = ({ viewOnly = false }) => {
                     label="Search by Name, Position, or Education Level"
                     variant="outlined"
                     fullWidth
+                    disabled
                     className="w-full md:w-1/2"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
             </Box>
 
-            {/* Researchers List */}
+            {/* Researchers List - Read Only */}
             <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 p-4 bg-slate-300 rounded-lg">
                 {filteredResearchers.length > 0 ? (
                     filteredResearchers.map((researcher) => (
-                        <SingleResearcher key={researcher.id} researcher={researcher} viewOnly={viewOnly} />
+                        <Card key={researcher.id} className="shadow-lg rounded-lg p-2">
+                            <CardMedia 
+                                component="img" 
+                                sx={{ height: 200, objectFit: "contain" }} 
+                                image={researcher.profilePhoto} 
+                                alt={researcher.name} 
+                            />
+                            <CardContent>
+                                <Typography variant="subtitle1" lineHeight={1} my={1}>
+                                    {researcher.name}
+                                </Typography>
+                                <Typography variant="caption" className="text-gray-600">
+                                    {researcher.position}
+                                </Typography>
+                                <Typography variant="caption" className="block text-gray-500">
+                                    {researcher.educationLevel}
+                                </Typography>
+                            </CardContent>
+                        </Card>
                     ))
                 ) : (
                     <Typography textAlign="center" className="col-span-full">
@@ -102,4 +122,4 @@ const UpdateResearchersList = ({ viewOnly = false }) => {
     );
 };
 
-export default UpdateResearchersList;
+export default ViewResearchersList;
