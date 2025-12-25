@@ -76,7 +76,7 @@ const ApplicantDetails = () => {
                   onClick={() => openDocument(url)}
                   className="capitalize"
                 >
-                  {key.replace(/[_\-]/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2")}
+                  {key.replace(/[_-]/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2")}
                 </Button>
               ))}
             </div>
