@@ -28,6 +28,7 @@ import ApplicationsList from './Pages/Others/Applications/ApplicationsList';
 import UpdateSubtopics from './Pages/AddNew/Project/UpdateSubtopics';
 import ManageActivities from './Pages/Update/Activity/ManageActivities';
 import UpdateActivityPage from './Pages/Update/Activity/UpdateActivityPage';
+import ScrollingNews from './Pages/Others/ScrollingNews';
 
 function App() {
   return (
@@ -75,6 +76,7 @@ function App() {
             {/* Others */}
 
             <Route path='others/messages' element={<ContactMessages/>}/>
+            <Route path='others/scrolling-news' element={<ScrollingNews/>}/>
             <Route path='others/applications' element={<VacancyList/>}/>
             <Route path="/Applications/:vacancy_id" element={<ApplicationsList />} />
             <Route path="/Applications/:vacancy_id/applicant/:applicant_id" element={<ApplicantDetails />} />

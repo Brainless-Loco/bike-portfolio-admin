@@ -25,6 +25,7 @@ const routes = {
   ],
   others:[
     { path: "/others/messages", label: "Messages" },
+    { path: "/others/scrolling-news", label: "Scrolling News" },
     { path: "/others/applications", label: "Applications" },
     { path:"https://docs.google.com/document/d/16z6ZEAPfC5lMZLSaejWE0uvK1HDtF4Anr5YwBGWNqpg/edit?usp=sharing", label:"Server Set up WIKI", target:"__blank"}
   ]
