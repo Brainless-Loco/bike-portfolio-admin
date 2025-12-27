@@ -10,7 +10,7 @@ import { db } from "../../../Utils/Firebase/Firebase";
 import Swal from "sweetalert2";
 import useAuthRedirect from "../../Auth/useAuthRedirect";
 
-export default function SinglePublication({ pub, onDelete }) {
+export default function SinglePublication({ pub, onDelete, viewOnly = false }) {
     const navigate = useNavigate();
 
     
@@ -57,20 +57,22 @@ export default function SinglePublication({ pub, onDelete }) {
                     variant="contained"
                     fullWidth
                     className="mt-2"
-                    onClick={() => navigate(`/update/publications/${pub.id}`, { state: pub })}
+                    onClick={() => navigate(`/update/publications/${pub.id}${viewOnly ? "?mode=view" : ""}`, { state: pub })}
                 >
-                    Update
+                    {viewOnly ? "View" : "Update"}
                 </Button>
 
-                <Button
-                    variant="outlined"
-                    color="error"
-                    fullWidth
-                    className="mt-2"
-                    onClick={handleDelete}
-                >
-                    Delete
-                </Button>
+                {!viewOnly && (
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        fullWidth
+                        className="mt-2"
+                        onClick={handleDelete}
+                    >
+                        Delete
+                    </Button>
+                )}
             </Box>
             </CardContent>
         </Card>

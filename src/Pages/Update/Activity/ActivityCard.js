@@ -5,7 +5,7 @@ import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 
-const ActivityCard = ({ activity, onDelete }) => {
+const ActivityCard = ({ activity, onDelete, viewOnly = false }) => {
     const navigate = useNavigate();
 
     return (
@@ -26,13 +26,15 @@ const ActivityCard = ({ activity, onDelete }) => {
 
             <Box display="flex" gap={2}>
                 <Button variant="contained" color="primary"
-                    onClick={() => navigate(`/update/activities/${activity.id}`)} >
-                    Update
+                    onClick={() => navigate(`/update/activities/${activity.id}${viewOnly ? "?mode=view" : ""}`)} >
+                    {viewOnly ? "View" : "Update"}
                 </Button>
 
-                <Button variant="contained" color="error" onClick={() => onDelete(activity.id)} >
-                    Delete
-                </Button>
+                {!viewOnly && (
+                    <Button variant="contained" color="error" onClick={() => onDelete(activity.id)} >
+                        Delete
+                    </Button>
+                )}
             </Box>
         </Box>
     );

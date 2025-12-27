@@ -12,6 +12,7 @@ import CardMedia from "@mui/material/CardMedia";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Editor from "../../../Components/QuillEditor/Editor";
+import ResourceAccessGuard from "../../../Components/ResourceAccessGuard/ResourceAccessGuard";
 import { db, storage } from "../../../Utils/Firebase/Firebase";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 import Swal from "sweetalert2";
@@ -19,6 +20,10 @@ import Swal from "sweetalert2";
 const UpdateSingleResearcherInfo = () => {
     const { id } = useParams();
     const location = useLocation();
+    
+    // Check if we're in view mode
+    const isViewMode = new URLSearchParams(location.search).get("mode") === "view";
+    
     const [loading, setLoading] = useState(false);
     const [researcher, setResearcher] = useState(location.state || null);
     const [newPhoto, setNewPhoto] = useState(null);
@@ -75,41 +80,56 @@ const UpdateSingleResearcherInfo = () => {
     if (!researcher) return <CircularProgress className="m-auto" />;
 
     return (
-        // tailwind classes for w-full in small devices but screen w-3/4 in lg devices
-
+      <ResourceAccessGuard resource="researchers" operation={isViewMode ? "read" : "update"} resourceId={id}>
         <div className="w-full md:w-3/4 mx-auto p-6 space-y-4 my-4 bg-white shadow-lg rounded-lg">
-            <Typography variant="h5">Update Info for "<i>{researcher.name}</i>"</Typography>
+            <Typography variant="h5">{isViewMode ? "View Info for " : "Update Info for "}"<i>{researcher.name}</i>"</Typography>
 
             {/* Profile Photo */}
             <CardMedia component="img" sx={{ objectFit: 'contain', height: '200px', mb: 2 }} image={newPhoto ? URL.createObjectURL(newPhoto) : researcher.profilePhoto} alt="Profile" />
             {/* Hidden File Input */}
-            <input
-                type="file"
-                accept="image/*"
-                id="upload-profile-photo"
-                style={{ display: "none" }}
-                onChange={(e) => setNewPhoto(e.target.files[0])}
-            />
-            {/* MUI Upload Button */}
-            <label htmlFor="upload-profile-photo" className="w-full flex justify-center">
-                <Button
-                    variant="contained"
-                    component="span"
-                    className="w-1/3 bg-cyan-500"
-                    mt={2}
-                >
-                    Upload New Photo
-                </Button>
-            </label>
+            {!isViewMode && (
+              <>
+                <input
+                    type="file"
+                    accept="image/*"
+                    id="upload-profile-photo"
+                    style={{ display: "none" }}
+                    onChange={(e) => setNewPhoto(e.target.files[0])}
+                />
+                {/* MUI Upload Button */}
+                <label htmlFor="upload-profile-photo" className="w-full flex justify-center">
+                    <Button
+                        variant="contained"
+                        component="span"
+                        className="w-1/3 bg-cyan-500"
+                        mt={2}
+                    >
+                        Upload New Photo
+                    </Button>
+                </label>
+              </>
+            )}
 
             {/* Name */}
-            <TextField label="Name" fullWidth value={researcher.name} onChange={(e) => setResearcher({ ...researcher, name: e.target.value })} />
+            <TextField 
+              label="Name" 
+              fullWidth 
+              disabled={isViewMode}
+              value={researcher.name} 
+              onChange={(e) => setResearcher({ ...researcher, name: e.target.value })} 
+            />
 
             {/* Position */}
-            <TextField label="Position" fullWidth value={researcher.position} onChange={(e) => setResearcher({ ...researcher, position: e.target.value })} />
+            <TextField 
+              label="Position" 
+              fullWidth 
+              disabled={isViewMode}
+              value={researcher.position} 
+              onChange={(e) => setResearcher({ ...researcher, position: e.target.value })} 
+            />
 
             {/* Education Level */}
-            <FormControl fullWidth>
+            <FormControl fullWidth disabled={isViewMode}>
                 <InputLabel>Education Level?</InputLabel>
                 <Select fullWidth value={researcher.educationLevel} onChange={(e) => setResearcher({ ...researcher, educationLevel: e.target.value })} label="Education Former?">
                     {["BSc Student", "MS Student", "PhD Student", "Teacher", "Others"].map((option) => (
@@ -121,20 +141,19 @@ const UpdateSingleResearcherInfo = () => {
             </FormControl>
 
             {/* Is Former */}
-            <FormControl fullWidth>
+            <FormControl fullWidth disabled={isViewMode}>
                 <InputLabel>Is Former?</InputLabel>
                 <Select fullWidth value={researcher.isFormer} onChange={(e) => setResearcher({ ...researcher, isFormer: e.target.value })} label="Is Former?">
                     <MenuItem value={true}>True</MenuItem>
                     <MenuItem value={false}>False</MenuItem>
                 </Select>
-
-
             </FormControl>
 
             {/* Short Description */}
             <TextField
                 label="Short Description"
                 fullWidth
+                disabled={isViewMode}
                 multiline
                 rows={3}
                 value={researcher.shortDescription}
@@ -142,13 +161,16 @@ const UpdateSingleResearcherInfo = () => {
             />
 
             {/* Broad Description (Editor) */}
-            <Editor value={description} editorTitle="Directors Info" updateHTMLContent={setDescription} />
+            <Editor value={description} editorTitle="Directors Info" updateHTMLContent={setDescription} readOnly={isViewMode} />
 
             {/* Update Button */}
-            <Button variant="contained" color="primary" fullWidth onClick={handleUpdate} disabled={loading}>
-                {loading ? <CircularProgress size={24} color="inherit" /> : "Update"}
-            </Button>
+            {!isViewMode && (
+              <Button variant="contained" color="primary" fullWidth onClick={handleUpdate} disabled={loading}>
+                  {loading ? <CircularProgress size={24} color="inherit" /> : "Update"}
+              </Button>
+            )}
         </div>
+      </ResourceAccessGuard>
     );
 };
 

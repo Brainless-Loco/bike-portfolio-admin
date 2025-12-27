@@ -5,12 +5,13 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import CircularProgress from "@mui/material/CircularProgress";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import { db } from "../../../Utils/Firebase/Firebase";
-import SinglePublication from "../../../Components/Update/Publications/SinglePublication";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
-import { hasAccess, isSuperAdmin, RESOURCE_TYPES } from "../../../Utils/RBAC/rbacUtils";
+import { getCurrentUser, hasAnyAccess, RESOURCE_TYPES } from "../../../Utils/RBAC/rbacUtils";
 
-const PublicationsList = ({ viewOnly = false }) => {
+const ViewPublicationsList = () => {
     const [publications, setPublications] = useState([]);
     const [filteredPublications, setFilteredPublications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,13 +29,13 @@ const PublicationsList = ({ viewOnly = false }) => {
                 }));
 
                 // Filter based on user's access to specific publications
+                const user = getCurrentUser();
                 let accessiblePublications = data;
                 
-                if (!isSuperAdmin()) {
-                    // Filter to only publications the user has access to
-                    const operation = viewOnly ? "read" : "update";
+                if (user && !user.isSuperAdmin) {
+                    // Filter to only publications the user has read access to
                     accessiblePublications = data.filter(pub => {
-                        return hasAccess(RESOURCE_TYPES.PUBLICATIONS, operation, pub.id);
+                        return hasAnyAccess(RESOURCE_TYPES.PUBLICATIONS, "read");
                     });
                 }
 
@@ -50,7 +51,7 @@ const PublicationsList = ({ viewOnly = false }) => {
         };
 
         fetchPublications();
-    }, [viewOnly]);
+    }, []);
 
     // Handle search filter
     useEffect(() => {
@@ -70,7 +71,7 @@ const PublicationsList = ({ viewOnly = false }) => {
     return (
         <Box mb={2} py={2} className="bg-gray-100 p-4 rounded-lg min-h-[95vh]">
             <Typography variant="h4" textAlign="center" mb={2}>
-                {viewOnly ? "View Research Publications" : "Update Research Publications"}
+                View Research Publications
             </Typography>
 
             {/* Search Input */}
@@ -78,18 +79,45 @@ const PublicationsList = ({ viewOnly = false }) => {
                 <TextField
                     label="Search by Title, Publisher, or Type"
                     fullWidth
+                    disabled
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </FormControl>
-            {/* Publications List */}
+
+            {/* Publications List - Read Only */}
             <Box className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">
                 {filteredPublications.map((pub) => (
-                    <SinglePublication pub={pub} viewOnly={viewOnly} />
+                    <Card key={pub.id} className="shadow-lg rounded-lg">
+                        <CardContent>
+                            <Typography variant="h6" className="font-bold mb-2">
+                                {pub.title}
+                            </Typography>
+                            <Typography variant="body2" className="text-gray-700 mb-2">
+                                <strong>Type:</strong> {pub.publicationType}
+                            </Typography>
+                            {pub.publisher?.title && (
+                                <Typography variant="body2" className="text-gray-600">
+                                    <strong>Publisher:</strong> {pub.publisher.title}
+                                </Typography>
+                            )}
+                            {pub.publicationDate && (
+                                <Typography variant="caption" className="block text-gray-500 mt-2">
+                                    Published: {new Date(pub.publicationDate).toLocaleDateString()}
+                                </Typography>
+                            )}
+                        </CardContent>
+                    </Card>
                 ))}
             </Box>
+
+            {filteredPublications.length === 0 && (
+                <Typography textAlign="center" className="mt-4">
+                    No publications found.
+                </Typography>
+            )}
         </Box>
     );
 };
 
-export default PublicationsList;
+export default ViewPublicationsList;

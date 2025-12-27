@@ -11,7 +11,7 @@ if (!Quill.imports["modules/imageResize"]) {
   Quill.register("modules/imageResize", ImageResize);
 }
 
-export default function Editor({ editorTitle, updateHTMLContent, value = "" }) {
+export default function Editor({ editorTitle, updateHTMLContent, value = "", readOnly = false }) {
   const editorContainerRef = useRef(null);
   const quillRef = useRef(null);
   const isMounted = useRef(false);
@@ -21,9 +21,10 @@ export default function Editor({ editorTitle, updateHTMLContent, value = "" }) {
 
     const quill = new Quill(editorContainerRef.current, {
       theme: "snow",
+      readOnly: readOnly,
       placeholder: "Write detailed information here...",
       modules: {
-        toolbar: [
+        toolbar: readOnly ? false : [
           [{ font: [] }],
           [{ header: [1, 2, 3, false] }],
           [{ size: ["small", false, "large", "huge"] }],
@@ -64,7 +65,7 @@ export default function Editor({ editorTitle, updateHTMLContent, value = "" }) {
     quill.root.innerHTML = value;
 
     
-  }, [updateHTMLContent, value]);
+  }, [updateHTMLContent, value, readOnly]);
 
   useEffect(() => {
     if (quillRef.current && quillRef.current.root.innerHTML !== value) {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Chip } from "@mui/material";
 
-const LabelsInput = ({labels, label, onChange }) => {
+const LabelsInput = ({labels, label, onChange, readOnly = false }) => {
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState(labels);
 
@@ -29,24 +29,26 @@ const LabelsInput = ({labels, label, onChange }) => {
           <Chip
             key={index}
             label={item}
-            onDelete={() => handleRemove(item)}
+            onDelete={!readOnly ? () => handleRemove(item) : undefined}
             color="primary"
             variant="outlined"
           />
         ))}
       </Box>
-      <Box display="flex" gap={2}>
-        <TextField
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          variant="outlined"
-          fullWidth
-          placeholder="Enter a label"
-        />
-        <Button variant="contained" onClick={handleAdd}>
-          Add
-        </Button>
-      </Box>
+      {!readOnly && (
+        <Box display="flex" gap={2}>
+          <TextField
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            variant="outlined"
+            fullWidth
+            placeholder="Enter a label"
+          />
+          <Button variant="contained" onClick={handleAdd}>
+            Add
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

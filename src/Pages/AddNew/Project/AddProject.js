@@ -12,8 +12,9 @@ import Editor from "../../../Components/QuillEditor/Editor";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 import { Helmet } from "react-helmet-async";
 import MemberList from "../../../Components/Projects/MemberList";
+import { getCurrentUser, hasAccess, RESOURCE_TYPES } from "../../../Utils/RBAC/rbacUtils";
 
-const AddProjects = () => {
+const AddProjects = ({ viewOnly = false }) => {
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [newTopic, setNewTopic] = useState("");
@@ -31,7 +32,19 @@ const AddProjects = () => {
         id: doc.id,
         ...doc.data(),
       }));
-      setTopics(topicData);
+      
+      // Filter based on user's access to specific projects
+      const user = getCurrentUser();
+      let accessibleTopics = topicData;
+      
+      if (user && !user.isSuperAdmin) {
+        // Filter to only projects the user has access to
+        accessibleTopics = topicData.filter(project => {
+          return hasAccess(RESOURCE_TYPES.PROJECTS, "update", project.id);
+        });
+      }
+      
+      setTopics(accessibleTopics);
     };
 
     fetchTopics();
@@ -147,8 +160,9 @@ const AddProjects = () => {
         <meta name="description" content="Add/Update project topic info in the BIKE Lab" />
       </Helmet>
       <Box className=" mx-7 mb-2 shadow rounded p-5">
-        <Typography variant="h3">Add/Update Project Topic Info</Typography>
+        <Typography variant="h3">{viewOnly ? "View Project Topic Info" : "Add/Update Project Topic Info"}</Typography>
         <Autocomplete
+          disabled={viewOnly}
           options={topics}
           getOptionLabel={(option) => option.topic_title}
           freeSolo
@@ -158,13 +172,17 @@ const AddProjects = () => {
           renderInput={(params) => <TextField {...params} label="Project Topic" fullWidth />}
         />
 
-        <MemberList members={members} setMembers={setMembers} />
+        <MemberList members={members} setMembers={setMembers} readOnly={viewOnly} />
 
-        <Editor editorTitle="Short Description" value={shortDescription} updateHTMLContent={setShortDescription} />
+        <Editor editorTitle="Short Description" value={shortDescription} updateHTMLContent={setShortDescription} readOnly={viewOnly} />
 
         
         <div className="flex justify-around w-full mt-4">
-          {!selectedTopic?.id ? (
+          {viewOnly ? (
+            <Button variant="contained" color="info" disabled>
+              View Only Mode
+            </Button>
+          ) : !selectedTopic?.id ? (
             <Button variant="contained" color="primary" onClick={handleAddTopic} disabled={!newTopic || !shortDescription}>
               Add Topic
             </Button>

@@ -7,7 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
 import useAuthRedirect from "../../Auth/useAuthRedirect";
 
-export default function SingleResearcher({ researcher }) {
+export default function SingleResearcher({ researcher, viewOnly = false }) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     
@@ -46,26 +46,28 @@ export default function SingleResearcher({ researcher }) {
                     {researcher.name}
                 </Typography>
                 <Box className="flex gap-2">
-                    {/* Update Button */}
+                    {/* View/Update Button */}
                     <Button
                         variant="contained"
                         color="primary"
                         fullWidth
-                        onClick={() => navigate(`/update/researchers/${researcher.id}`, { state: researcher })}
+                        onClick={() => navigate(`/update/researchers/${researcher.id}${viewOnly ? "?mode=view" : ""}`, { state: researcher })}
                     >
-                        Update
+                        {viewOnly ? "View" : "Update"}
                     </Button>
 
-                    {/* Delete Button */}
-                    <Button
-                        variant="contained"
-                        color="error"
-                        fullWidth
-                        onClick={handleDelete}
-                        disabled={loading}
-                    >
-                        {loading ? <CircularProgress size={24} color="inherit" /> : "Delete"}
-                    </Button>
+                    {/* Delete Button - Hidden in view mode */}
+                    {!viewOnly && (
+                        <Button
+                            variant="contained"
+                            color="error"
+                            fullWidth
+                            onClick={handleDelete}
+                            disabled={loading}
+                        >
+                            {loading ? <CircularProgress size={24} color="inherit" /> : "Delete"}
+                        </Button>
+                    )}
                 </Box>
             </CardContent>
         </Card>
