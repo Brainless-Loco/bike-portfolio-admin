@@ -15,7 +15,8 @@ export const RESOURCE_TYPES = {
   VACANCIES: "vacancies",
   APPLICATIONS: "applications",
   BASIC_INFO: "basicInfo",
-  USERS: "users"
+  USERS: "users",
+  FEATURED_MEMBERS: "featuredMembers"
 };
 
 export const OPERATIONS = {

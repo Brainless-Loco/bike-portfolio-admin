@@ -31,6 +31,7 @@ import ViewProjectDetail from './Pages/Update/Projects/ViewProjectDetail';
 import UserManagement from './Pages/RBAC/UserManagement';
 import RoleManagement from './Pages/RBAC/RoleManagement';
 import ScrollingNews from './Pages/Others/ScrollingNews';
+import FeaturedMembersManager from './Pages/AddNew/FeaturedMembers/FeaturedMembersManager';
 
 function App() {
   return (
@@ -154,6 +155,7 @@ function App() {
 
             <Route path='others/messages' element={<ContactMessages/>}/>
             <Route path='others/scrolling-news' element={<ScrollingNews/>}/>
+            <Route path='others/featured-members' element={<FeaturedMembersManager/>}/>
             <Route path='others/applications' element={<VacancyList/>}/>
             <Route path="/Applications/:vacancy_id" element={<ApplicationsList />} />
             <Route path="/Applications/:vacancy_id/applicant/:applicant_id" element={<ApplicantDetails />} />

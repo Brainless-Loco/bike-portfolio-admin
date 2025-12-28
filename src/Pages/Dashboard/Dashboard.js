@@ -36,6 +36,7 @@ const routes = {
     { path: "/others/messages", label: "Messages", resource: "messages", operation: "read" },
     { path: "/others/applications", label: "Applications", resource: RESOURCE_TYPES.APPLICATIONS, operation: "read" },
     { path: "/others/scrolling-news", label: "Scrolling News" },
+    { path: "/others/featured-members", label: "Featured Team Members", resource: RESOURCE_TYPES.FEATURED_MEMBERS, operation: "update", superAdminOnly: true },
     { path:"https://docs.google.com/document/d/16z6ZEAPfC5lMZLSaejWE0uvK1HDtF4Anr5YwBGWNqpg/edit?usp=sharing", label:"Server Set up WIKI", target:"__blank"}
   ],
   rbac: [

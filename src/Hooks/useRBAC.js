@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { hasAccess, isSuperAdmin, getCurrentUser, getEffectivePermissions } from "../Utils/RBAC/rbacUtils";
+import { hasAccess, isSuperAdmin, getCurrentUser, getUserEffectivePermissions } from "../Utils/RBAC/rbacUtils";
 
 /**
  * Custom hook for checking user RBAC permissions
@@ -124,7 +124,7 @@ export const useEffectivePermissions = (roleId) => {
     const loadPermissions = async () => {
       try {
         setIsLoading(true);
-        const perms = await getEffectivePermissions(roleId);
+        const perms = await getUserEffectivePermissions(roleId);
         setPermissions(perms);
       } catch (err) {
         console.error("Error loading effective permissions:", err);
