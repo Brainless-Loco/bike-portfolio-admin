@@ -7,6 +7,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Avatar from '@mui/material/Avatar';
 import Select from '@mui/material/Select'
+import Autocomplete from '@mui/material/Autocomplete';
 import "quill/dist/quill.snow.css";
 import Editor from "../../../Components/QuillEditor/Editor";
 import { Helmet } from 'react-helmet-async';
@@ -18,10 +19,12 @@ const ResearcherProfileForm = () => {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [name, setName] = useState("");
   const [position, setPosition] = useState("");
-  const [educationLevel, setEducationLevel] = useState("");
+  const [educationLevel, setEducationLevel] = useState(null);
   const [shortDescription, setShortDescription] = useState("");
   const [broadDescription, setBroadDescription] = useState("");
   const [isFormer, setIsFormer] = useState(false);
+
+  const educationLevelOptions = ["BSc Student", "MS Student", "PhD Student", "Teacher", "Others"];
 
   useAuthRedirect();
 
@@ -118,21 +121,30 @@ const ResearcherProfileForm = () => {
       />
 
       {/* Education Level */}
-      <FormControl margin="normal"
-        className="bg-slate-100 w-2/4">
-        <InputLabel>Current Education Level</InputLabel>
-        <Select
-          value={educationLevel}
-          onChange={(e) => setEducationLevel(e.target.value)}
-          label="Current Education Level"
-        >
-          {["BSc Student", "MS Student", "PhD Student", "Teacher", "Others"].map((option) => (
-            <MenuItem key={option} value={option}>
-              {option}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Autocomplete
+        freeSolo
+        options={educationLevelOptions}
+        value={educationLevel}
+        onChange={(event, newValue) => {
+          setEducationLevel(newValue);
+        }}
+        inputValue={educationLevel || ''}
+        onInputChange={(event, newInputValue) => {
+          setEducationLevel(newInputValue);
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Current Education Level"
+            placeholder="Select or type custom level"
+            variant="outlined"
+            margin="normal"
+            className="bg-slate-100 w-2/4"
+          />
+        )}
+        className="bg-slate-100 w-2/4"
+        sx={{ mt: 2, mb: 2 }}
+      />
 
       <FormControl className="bg-slate-100 w-2/4" margin="normal">
         <InputLabel id="is-former-label">Is Former</InputLabel>

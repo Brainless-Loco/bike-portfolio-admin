@@ -4,7 +4,7 @@
  */
 
 import { db } from "../Firebase/Firebase";
-import { doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, getDocs } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { isSuperAdmin } from './rbacCore';
 
 /**
@@ -54,14 +54,15 @@ export const createAdminUser = async (userData) => {
  */
 export const getAllAdminUsers = async () => {
   try {
-    const usersRef = collection(db, "users");
-    const q = query(usersRef);
-    const querySnapshot = await getDocs(q);
+    // Read from BasicInfo/auth which is the source of truth for user accounts
+    const authDocRef = doc(db, "BasicInfo", "auth");
+    const authDocSnap = await getDoc(authDocRef);
     
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    if (authDocSnap.exists()) {
+      const accounts = authDocSnap.data().accounts || [];
+      return accounts;
+    }
+    return [];
   } catch (error) {
     console.error("Error fetching users:", error);
     throw error;

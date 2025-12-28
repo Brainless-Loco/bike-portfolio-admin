@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, collection, getDocs } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -28,6 +28,7 @@ const UpdateSingleResearcherInfo = () => {
     const [researcher, setResearcher] = useState(location.state || null);
     const [newPhoto, setNewPhoto] = useState(null);
     const [description, setDescription] = useState("");
+    const [isUpdating, setIsUpdating] = useState(false);
 
     useAuthRedirect();
 
@@ -48,7 +49,7 @@ const UpdateSingleResearcherInfo = () => {
     }, [id, researcher]);
 
     const handleUpdate = async () => {
-        setLoading(true);
+        setIsUpdating(true);
         try {
             const docRef = doc(db, "researchers", id);
             let photoURL = researcher.profilePhoto;
@@ -61,20 +62,25 @@ const UpdateSingleResearcherInfo = () => {
             }
 
             // Update researcher data
-            await updateDoc(docRef, {
+            const updatedData = {
                 ...researcher,
                 broadDescription: description,
                 profilePhoto: photoURL,
-            });
+            };
+            
+            await updateDoc(docRef, updatedData);
+
+            // Update local state immediately
+            setResearcher(updatedData);
+            setNewPhoto(null);
+            setDescription(updatedData.broadDescription);
 
             Swal.fire("Success!", "All the information has been updated successfully.", "success");
-            window.location.reload();
-
         } catch (error) {
             Swal.fire("Error", "Failed to Update.", "error");
             console.error("Update failed:", error);
         }
-        setLoading(false);
+        setIsUpdating(false);
     };
 
     if (!researcher) return <CircularProgress className="m-auto" />;
@@ -129,16 +135,13 @@ const UpdateSingleResearcherInfo = () => {
             />
 
             {/* Education Level */}
-            <FormControl fullWidth disabled={isViewMode}>
-                <InputLabel>Education Level?</InputLabel>
-                <Select fullWidth value={researcher.educationLevel} onChange={(e) => setResearcher({ ...researcher, educationLevel: e.target.value })} label="Education Former?">
-                    {["BSc Student", "MS Student", "PhD Student", "Teacher", "Others"].map((option) => (
-                        <MenuItem key={option} value={option}>
-                            {option}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            <TextField
+                label="Education Level"
+                fullWidth
+                disabled={isViewMode}
+                value={researcher.educationLevel || ""}
+                onChange={(e) => setResearcher({ ...researcher, educationLevel: e.target.value })}
+            />
 
             {/* Is Former */}
             <FormControl fullWidth disabled={isViewMode}>
@@ -165,8 +168,8 @@ const UpdateSingleResearcherInfo = () => {
 
             {/* Update Button */}
             {!isViewMode && (
-              <Button variant="contained" color="primary" fullWidth onClick={handleUpdate} disabled={loading}>
-                  {loading ? <CircularProgress size={24} color="inherit" /> : "Update"}
+              <Button variant="contained" color="primary" fullWidth onClick={handleUpdate} disabled={isUpdating}>
+                  {isUpdating ? <CircularProgress size={24} color="inherit" /> : "Update"}
               </Button>
             )}
         </div>

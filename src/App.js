@@ -55,12 +55,12 @@ function App() {
 
             {/* Update Routes - Protected */}
             <Route path='/update/researchers' element={
-              <ProtectedRoute resource="researchers" operation="read">
+              <ProtectedRoute resource="researchers" operation="update">
                 <UpdateResearchersList/>
               </ProtectedRoute>
             }/>
             <Route path='/update/researchers/:id' element={
-              <ProtectedRoute resource="researchers" operation="read">
+              <ProtectedRoute resource="researchers" operation="update">
                 <UpdateSingleResearcherInfo/>
               </ProtectedRoute>
             }/>

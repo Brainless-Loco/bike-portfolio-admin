@@ -123,8 +123,6 @@ export const checkRoleAccess = async (roleId, resourceType, operation, resourceI
  */
 export const assignUserRoles = async (userId, roleIds = []) => {
   try {
-    const userRef = doc(db, "users", userId);
-    
     let validatedRoles = roleIds;
     
     if (roleIds.length > 0) {
@@ -136,13 +134,27 @@ export const assignUserRoles = async (userId, roleIds = []) => {
       }
     }
 
-    const { updateDoc: firebaseUpdateDoc } = require("firebase/firestore");
-    await firebaseUpdateDoc(userRef, {
-      roles: validatedRoles,
-      updatedAt: new Date().toISOString(),
-    });
-
-    return { success: true, rolesAssigned: validatedRoles };
+    // Update user in BasicInfo/auth (source of truth for users)
+    const authDocRef = doc(db, "BasicInfo", "auth");
+    const authDocSnap = await getDoc(authDocRef);
+    
+    if (authDocSnap.exists()) {
+      const accounts = authDocSnap.data().accounts || [];
+      const userIndex = accounts.findIndex(acc => acc.id === userId);
+      
+      if (userIndex !== -1) {
+        accounts[userIndex].roles = validatedRoles;
+        accounts[userIndex].updatedAt = new Date().toISOString();
+        
+        await updateDoc(authDocRef, { accounts });
+        
+        return { success: true, rolesAssigned: validatedRoles };
+      } else {
+        throw new Error(`User '${userId}' not found`);
+      }
+    } else {
+      throw new Error("Auth configuration not found");
+    }
   } catch (error) {
     console.error(`Error assigning roles to user ${userId}:`, error);
     throw new Error(error.message || "Failed to assign roles");
