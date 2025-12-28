@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import { doc, getDoc, updateDoc, collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, updateDoc, } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -24,7 +24,7 @@ const UpdateSingleResearcherInfo = () => {
     // Check if we're in view mode
     const isViewMode = new URLSearchParams(location.search).get("mode") === "view";
     
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [researcher, setResearcher] = useState(location.state || null);
     const [newPhoto, setNewPhoto] = useState(null);
     const [description, setDescription] = useState("");

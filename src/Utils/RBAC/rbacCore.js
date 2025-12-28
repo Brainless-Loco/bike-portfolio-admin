@@ -103,6 +103,7 @@ export const hasAnyAccess = (resourceType, operation) => {
   
   if (user.effectivePermissions && user.effectivePermissions[resourceType]) {
     const resourceAccess = user.effectivePermissions[resourceType];
+    // eslint-disable-next-line
     for (const [resourceId, operations] of Object.entries(resourceAccess)) {
       if (hasOperation(operations)) return true;
     }
@@ -110,6 +111,7 @@ export const hasAnyAccess = (resourceType, operation) => {
   
   if (user.accessControl && user.accessControl[resourceType]) {
     const resourceAccess = user.accessControl[resourceType];
+    // eslint-disable-next-line
     for (const [resourceId, operations] of Object.entries(resourceAccess)) {
       if (hasOperation(operations)) return true;
     }
