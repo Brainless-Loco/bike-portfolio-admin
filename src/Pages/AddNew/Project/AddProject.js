@@ -12,7 +12,7 @@ import Editor from "../../../Components/QuillEditor/Editor";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 import { Helmet } from "react-helmet-async";
 import MemberList from "../../../Components/Projects/MemberList";
-import { getCurrentUser, hasAccess, RESOURCE_TYPES } from "../../../Utils/RBAC/rbacUtils";
+import { getCurrentUser, hasAccess, isSuperAdmin, RESOURCE_TYPES } from "../../../Utils/RBAC/rbacUtils";
 
 const AddProjects = ({ viewOnly = false }) => {
   const [topics, setTopics] = useState([]);
@@ -37,7 +37,7 @@ const AddProjects = ({ viewOnly = false }) => {
       const user = getCurrentUser();
       let accessibleTopics = topicData;
       
-      if (user && !user.isSuperAdmin) {
+      if (user && !isSuperAdmin()) {
         // Filter to only projects the user has access to
         accessibleTopics = topicData.filter(project => {
           return hasAccess(RESOURCE_TYPES.PROJECTS, "update", project.id);

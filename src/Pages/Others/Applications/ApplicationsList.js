@@ -55,16 +55,53 @@ const ApplicationsList = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          // Delete Firestore document
           await deleteDoc(doc(db, `Vacancies/${vacancy_id}/Applications`, applicant_id));
 
-          for (const filePath of Object.values(documents || {})) {
-            await deleteObject(ref(storage, filePath));
+          // Delete all associated files from Storage
+          if (documents) {
+            const fileUrls = [];
+
+            // applicationDocs: object with key->url pairs
+            if (documents.applicationDocs && typeof documents.applicationDocs === 'object') {
+              fileUrls.push(...Object.values(documents.applicationDocs).filter(Boolean));
+            }
+
+            // otherDocs: array of { title, url }
+            if (Array.isArray(documents.otherDocs)) {
+              documents.otherDocs.forEach(doc => {
+                if (doc?.url) fileUrls.push(doc.url);
+              });
+            }
+
+            // references: array of urls
+            if (Array.isArray(documents.references)) {
+              fileUrls.push(...documents.references.filter(Boolean));
+            }
+
+            // publications: array of { title, file, coAuthorStatement }
+            if (Array.isArray(documents.publications)) {
+              documents.publications.forEach(pub => {
+                if (pub?.file) fileUrls.push(pub.file);
+                if (pub?.coAuthorStatement) fileUrls.push(pub.coAuthorStatement);
+              });
+            }
+
+            // Delete all files
+            for (const url of fileUrls) {
+              try {
+                await deleteObject(ref(storage, url));
+              } catch (error) {
+                console.warn(`Failed to delete file: ${url}`, error);
+              }
+            }
           }
 
           setApplications((prev) => prev.filter((app) => app.id !== applicant_id));
 
           Swal.fire("Deleted!", "The application has been deleted.", "success");
         } catch (error) {
+          console.error("Delete error:", error);
           Swal.fire("Error", "Failed to delete the application.", "error");
         }
       }

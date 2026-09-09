@@ -15,17 +15,21 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import CircularProgress from "@mui/material/CircularProgress";
 import Link from "@mui/material/Link";
+import DownloadIcon from "@mui/icons-material/Download";
 import { db } from "../../../Utils/Firebase/Firebase";
 import PDFModal from "../../../Components/Modal/PDFModal";
 import useAuthRedirect from "../../../Components/Auth/useAuthRedirect";
 import BasicKeyValueTableRow from "./TableTemplates/BasicKeyValueTableRow";
+import Swal from "sweetalert2";
 
 const ApplicantDetails = () => {
   const { vacancy_id, applicant_id } = useParams();
   const [applicant, setApplicant] = useState(null);
   const [selectedDocUrl, setSelectedDocUrl] = useState(null);
   const [modalType, setModalType] = useState(null); // 'pdf' | 'other' | null
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   useAuthRedirect();
 
@@ -55,6 +59,34 @@ const ApplicantDetails = () => {
   const closeModal = () => {
     setSelectedDocUrl(null);
     setModalType(null);
+  };
+
+  const handleDownloadPDF = async () => {
+    setIsGeneratingPDF(true);
+    try {
+      // Call local server endpoint to merge files server-side to avoid CORS issues
+      const resp = await fetch(`http://localhost:5000/merge?vacancyId=${vacancy_id}&applicantId=${applicant_id}`, {
+        method: 'GET'
+      });
+
+      if (!resp.ok) throw new Error(`Server responded ${resp.status}`);
+
+      const blob = await resp.blob();
+      const fileName = `Application_${(applicant.personalData?.firstName||'')}_${(applicant.personalData?.lastName||'')}_${(applicant.positionName||'')}.pdf`.replace(/\s+/g, '_');
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      Swal.fire({ title: 'Downloaded', text: 'Merged application PDF downloaded.', icon: 'success' });
+    } catch (error) {
+      console.error('Server merge error:', error);
+      Swal.fire({ title: 'Error', text: `Failed to generate merged PDF: ${error.message}`, icon: 'error' });
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   // helper to render the new documents structure
@@ -189,7 +221,19 @@ const ApplicantDetails = () => {
 
   return (
     <Box className="border p-3 my-3 bg-white rounded shadow min-h-[95vh]">
-      <Typography className="text-[#0c2461] pb-3" variant="h3">Applicant Details</Typography>
+      <Box className="flex justify-between items-center pb-3">
+        <Typography className="text-[#0c2461]" variant="h3">Applicant Details</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={isGeneratingPDF ? <CircularProgress size={20} color="inherit" /> : <DownloadIcon />}
+          onClick={handleDownloadPDF}
+          disabled={isGeneratingPDF || !applicant}
+          className="bg-[#0c2461]"
+        >
+          {isGeneratingPDF ? 'Generating...' : 'Download PDF'}
+        </Button>
+      </Box>
 
       <TableContainer component={Paper} className="mb-4">
         <Table className="min-w-full">

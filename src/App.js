@@ -77,12 +77,12 @@ function App() {
             }/>
 
             <Route path='/update/projects' element={
-              <ProtectedRoute resource="projects" operation="read">
+              <ProtectedRoute resource="projects" operation="update">
                 <UpdateProjects/>
               </ProtectedRoute>
             }/>
             <Route path="/update/subtopics/:id" element={
-              <ProtectedRoute resource="projects" operation="read">
+              <ProtectedRoute resource="projects" operation="update">
                 <UpdateSubtopics />
               </ProtectedRoute>
             } />

@@ -10,13 +10,10 @@ import {
   setDoc,
   getDoc,
   query,
-  where,
   getDocs,
-  deleteDoc,
   updateDoc,
   arrayUnion,
   arrayRemove,
-  writeBatch,
 } from 'firebase/firestore';
 
 const FEATURED_MEMBERS_COLLECTION = 'featuredMembers';
