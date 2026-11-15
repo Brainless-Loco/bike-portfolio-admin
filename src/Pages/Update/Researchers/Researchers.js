@@ -61,7 +61,7 @@ const UpdateResearchersList = ({ viewOnly = false }) => {
     useEffect(() => {
         const filtered = researchers.filter(({ name, position, educationLevel }) =>
             [name, position, educationLevel]
-                .some(field => field.toLowerCase().includes(searchQuery.toLowerCase()))
+                .some(field => (field || "").toLowerCase().includes(searchQuery.toLowerCase()))
         );
         setFilteredResearchers(filtered);
     }, [searchQuery, researchers]);

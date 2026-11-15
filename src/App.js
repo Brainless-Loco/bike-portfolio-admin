@@ -18,6 +18,7 @@ import UpdateSingleResearcherInfo from './Pages/Update/Researchers/UpdateSingleR
 import PublicationsList from './Pages/Update/Researches/PublicationsList';
 import UpdateSignlePublication from './Pages/Update/Researches/UpdateSinglePublication';
 import UpdateProjects from './Pages/Update/Projects/UpdateProjects';
+import UpdateVacancyForm from './Pages/Update/Vacancy/VacancyForm';
 import ContactMessages from './Pages/Others/ContactMessages';
 import VacancyForm from './Pages/AddNew/Vacancy/VacancyForm';
 import VacancyList from './Pages/Others/Applications/VacancyList'
@@ -79,6 +80,11 @@ function App() {
             <Route path='/update/projects' element={
               <ProtectedRoute resource="projects" operation="update">
                 <UpdateProjects/>
+              </ProtectedRoute>
+            }/>
+            <Route path='/update/vacancy' element={
+              <ProtectedRoute resource="vacancies" operation="update">
+                <UpdateVacancyForm/>
               </ProtectedRoute>
             }/>
             <Route path="/update/subtopics/:id" element={
